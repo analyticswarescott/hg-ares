@@ -1,0 +1,58 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "Platform error fields",
+    "version_date": "2015-11-23 07:38:11.028 -0800",
+    "body": {"fields": [
+
+        {
+            "array": false,
+            "description": "stack trace",
+            "tags": [ "error" ],
+            "type": "string",
+            "display_name": "stack trace",
+            "name": "err_stack"
+        },
+        {
+            "array": false,
+            "description": "error type",
+            "tags": [ "error" ],
+            "type": "string",
+            "display_name": "error type",
+            "name": "err_type"
+        },
+        {
+            "array": false,
+            "description": "error - origin component",
+            "tags": [ "error" ],
+            "type": "string",
+            "display_name": "error - origin component",
+            "name": "err_role"
+        },
+        {
+            "array": true,
+            "description": "error - related components",
+            "tags": [ "error" ],
+            "type": "string",
+            "display_name": "error - related components",
+            "name": "err_related"
+        },
+        {
+            "array": false,
+            "description": "error message",
+            "tags": [ "error" ],
+            "type": "string",
+            "display_name": "error message",
+            "name": "err_msg"
+        },
+        {
+            "array": false,
+            "description": "error - origin host",
+            "tags": [ "error" ],
+            "type": "string",
+            "display_name": "error - origin host",
+            "name": "err_host"
+        }
+
+    ]}
+}

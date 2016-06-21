@@ -1,0 +1,42 @@
+{
+  "display_name": "A sample rule",
+  "description": "This sample rule creates a critical incident when a process is involved in a violation whose name (pn) contains the word nvidia, except cases where it also contains excel.",
+  "author": "aw",
+  "body_class" : "com.aw.compute.detection.SimpleRule",
+  "body": {
+
+    "id" : "sample_rule_id",
+    "name" : "sample rule name",
+
+    "filter" : {
+
+        "field" : "err_msg",
+        "operator" : "contains",
+        "values" : [ "test" ]
+
+    },
+
+    "exclusions" : [
+
+    ],
+
+    "actions" : [
+
+        {
+            "a_type" : "incident_create",
+            "dg_comment" : "incident created from sample_rule_id",
+            "inc_incident" : {
+
+                "inc_sev" : "critical",
+                "dg_name" : "error detected",
+                "dg_description" : "error detected, message=${event.err_msg}",
+                "inc_ctype" : "automatic",
+                "dg_tags" : [ "test error" ]
+
+            }
+        }
+
+    ]
+
+  }
+}

@@ -1,0 +1,27 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "Common DG Action Fields",
+    "body": {"fields": [
+
+        {
+            "array": false,
+            "description": "action type",
+            "tags": [ "common", "guid" ],
+            "type": "guid",
+            "display_name": "action type",
+            "name": "a_type"
+        },
+
+        {
+            "array": false,
+            "description": "action guid",
+            "tags": [ "common", "guid" ],
+            "type": "guid",
+            "display_name": "action guid",
+            "name": "a_guid"
+        }
+
+        ]
+    }
+}

@@ -1,0 +1,181 @@
+{
+    "display_name": "Test Space",
+    "description": "New format",
+    "type": "workspace",
+    "body": {
+        "filter": {},
+        "elements": [
+            {
+                "layout": {
+                    "size": {
+                        "x": 6,
+                        "y": 2
+                    }
+                },
+                "element_id": 1,
+                "type": "chart",
+                "body": {
+                    "chart_options": {
+                        "chart_type": "area.stacked"
+                    },
+                    "query": {
+                        "attributes": [
+                            {
+                                "field": "dg_time",
+                                "order": "asc",
+                                "aggregate": "day"
+                            },
+                            {
+                                "field": "ua_in",
+                                "order": "none",
+                                "aggregate": "none"
+                            },
+                            {
+                                "field": "*",
+                                "order": "asc",
+                                "aggregate": "count"
+                            }
+                        ],
+                        "filter": {
+                            "operator": "AND",
+                            "filter": [
+                                {
+                                    "field": "dg_time",
+                                    "operator": "eq",
+                                    "values": [
+                                        "last_n_days",
+                                        "30"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            {
+                "layout": {
+                    "size": {
+                        "x": 2,
+                        "y": 2
+                    }
+                },
+                "element_id": 2,
+                "type": "chart",
+                "body": {
+                    "chart_options": {
+                        "chart_type": "column"
+                    },
+                    "query": {
+                        "attributes": [
+                            {
+                                "field": "dg_user",
+                                "order": "asc",
+                                "aggregate": "none"
+                            },
+                            {
+                                "field": "*",
+                                "order": "asc",
+                                "aggregate": "count"
+                            }
+                        ],
+                        "filter": {
+                            "operator": "AND",
+                            "filter": [
+                                {
+                                    "field": "dg_time",
+                                    "operator": "in",
+                                    "values": [
+                                        "last_n_days",
+                                        "30"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            {
+                "layout": {
+                    "size": {
+                        "x": 2,
+                        "y": 2
+                    }
+                },
+                "element_id": 3,
+                "type": "chart",
+                "body": {
+                    "chart_options": {
+                        "chart_type": "column"
+                    },
+                    "query": {
+                        "attributes": [
+                            {
+                                "field": "ua_in",
+                                "order": "asc",
+                                "aggregate": "none"
+                            },
+                            {
+                                "field": "*",
+                                "order": "asc",
+                                "aggregate": "count"
+                            }
+                        ],
+                        "filter": {
+                            "operator": "AND",
+                            "filter": [
+                                {
+                                    "field": "dg_time",
+                                    "operator": "eq",
+                                    "values": [
+                                        "today"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            {
+                "layout": {
+                    "size": {
+                        "x": 2,
+                        "y": 2
+                    }
+                },
+                "element_id": 4,
+                "type": "chart",
+                "body": {
+                    "chart_options": {
+                        "chart_type": "column"
+                    },
+                    "query": {
+                        "attributes": [
+                            {
+                                "field": "dg_time",
+                                "order": "asc",
+                                "aggregate": "hour"
+                            },
+                            {
+                                "field": "*",
+                                "order": "asc",
+                                "aggregate": "count"
+                            }
+                        ],
+                        "filter": {
+                            "operator": "AND",
+                            "filter": [
+                                {
+                                    "field": "dg_time",
+                                    "operator": "eq",
+                                    "values": [
+                                        "today"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

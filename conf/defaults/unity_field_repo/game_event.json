@@ -1,0 +1,77 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "game event fields",
+    "version_date": "2016-05-23 07:38:11.028 -0800",
+    "body": {"fields": [
+
+        {
+			"array": false,
+			"description": "eventId",
+			"tags": [ "error" ],
+			"type": "string",
+			"display_name": "event id",
+			"name": "eventId"
+		},
+		{
+			"array": false,
+			"description": "alarmActive",
+			"tags": [ "error" ],
+			"type": "int",
+			"display_name": "alarm Active ",
+			"name": "alarmActive"
+		},
+		{
+			"array": false,
+			"description": "alarmCode",
+			"tags": [ "error" ],
+			"type": "long",
+			"display_name": "alarm Code ",
+			"name": "alarmCode"
+		}
+	,
+		{
+			"array": false,
+			"description": "someDouble",
+			"tags": [ "error" ],
+			"type": "double",
+			"display_name": "test double ",
+			"name": "someDouble"
+		}
+	,
+		{
+			"array": false,
+			"description": "someBigInt",
+			"tags": [ "error" ],
+			"type": "long",
+			"display_name": "test bigint ",
+			"name": "someBigInt"
+		}
+	,
+		{
+			"array": false,
+			"description": "someTimestamp",
+			"tags": [ "error" ],
+			"type": "timestamp",
+			"display_name": "test timestanp ",
+			"name": "someTimestamp"
+		}
+	,
+		{
+			"array": false,
+			"description": "alarmCodeDesc",
+			"tags": [ "error" ],
+			"type": "string",
+			"display_name": "alarm Code Description ",
+			"name": "alarmCodeDesc",
+			"reference" : {
+				"reference_type" : "alarmcodedescriptions",
+				"reference_key" : "alarmcode",
+				"reference_value" : "alarmcodedesc",
+				"local_key" : "alarmCode",
+				"required" : "false"
+			}
+		}
+
+    ]}
+}

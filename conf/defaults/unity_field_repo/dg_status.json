@@ -1,0 +1,41 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "platform status fields",
+    "body": {"fields": [
+
+        {
+            "array": false,
+            "description": "message topic",
+            "tags": [ "system", "status" ],
+            "type": "string",
+            "display_name": "message topic",
+            "name": "stat_topic"
+        },
+        {
+            "array": false,
+            "description": "processed position",
+            "tags": [ "system", "status" ],
+            "type": "long",
+            "display_name": "processed position",
+            "name": "stat_processed_pos"
+        },
+        {
+            "array": false,
+            "description": "latest position",
+            "tags": [ "system", "status" ],
+            "type": "long",
+            "display_name": "latest position",
+            "name": "stat_latest_pos"
+        },
+        {
+            "array": false,
+            "description": "topic partition",
+            "tags": [ "system", "status" ],
+            "type": "string",
+            "display_name": "topic partition",
+            "name": "stat_partition"
+        }
+
+    ]}
+}

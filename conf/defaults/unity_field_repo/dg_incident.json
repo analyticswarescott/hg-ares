@@ -1,0 +1,155 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "Incident Fields",
+    "body": {
+    	"fields": [
+
+            {
+                "array": false,
+                "description": "state",
+                "tags": [ "incident" ],
+                "type": "string",
+                "display_name": "state",
+                "name": "inc_state"
+            },
+
+            {
+                "array": false,
+                "description": "creator",
+                "tags": [ "incident" ],
+                "type": "string",
+                "display_name": "creator",
+                "name": "inc_creator"
+            },
+
+            {
+                "array": false,
+                "description": "assignee",
+                "tags": [ "incident" ],
+                "type": "string",
+                "display_name": "assignee",
+                "name": "inc_assign"
+            },
+
+            {
+                "array": false,
+                "description": "modified time",
+                "tags": [ "incident" ],
+                "type": "timestamp",
+                "display_name": "modified time",
+                "name": "inc_mtime"
+            },
+
+            {
+                "array": false,
+                "description": "severity",
+                "tags": [ "incident" ],
+                "type": "string",
+                "display_name": "severity",
+                "name": "inc_sev"
+            },
+
+            {
+                "array": false,
+                "description": "severity sorting value",
+                "tags": [ "incident" ],
+                "type": "int",
+                "display_name": "severity score",
+                "name": "inc_sev_score"
+            },
+
+            {
+                "array": false,
+                "description": "close comment",
+                "tags": [ "incident" ],
+                "type": "string",
+                "display_name": "close comment",
+                "name": "inc_ccomment"
+            },
+
+            {
+                "array": false,
+                "description": "creation type",
+                "tags": [ "incident" ],
+                "type": "string",
+                "display_name": "creation type",
+                "name": "inc_ctype"
+            },
+
+            {
+                "array": true,
+                "description": "comments",
+                "tags": [ "incident" ],
+                "type": "object",
+                "display_name": "comments",
+                "name": "inc_comments"
+            },
+
+            {
+                "array": false,
+                "description": "related incident guid",
+                "tags": [ "incident" ],
+                "type": "object",
+                "object_type" : "incident",
+                "display_name": "related incident guid",
+                "name": "inc_incident"
+            },
+
+            {
+                "array": false,
+                "description": "comment user",
+                "tags": [ "incident" ],
+                "type": "string",
+                "display_name": "comment user",
+                "name": "inc_com_user"
+            },
+
+            {
+                "array": false,
+                "description": "comment timestamp",
+                "tags": [ "incident" ],
+                "type": "timestamp",
+                "display_name": "comment timestamp",
+                "name": "inc_com_time"
+            },
+
+            {
+                "array": false,
+                "description": "incident guid",
+                "tags": [ "incident" ],
+                "type": "guid",
+                "display_name": "incident guid",
+                "name": "inc_guid"
+            },
+
+            {
+                "array": true,
+                "description": "associated id(s) to the incident",
+                "tags": [ "incident" ],
+                "type": "guid",
+                "display_name": "associated id(s)",
+                "name": "inc_assoc_id"
+            },
+
+            {
+                "array": false,
+                "description": "association type",
+                "tags": [ "incident" ],
+                "type": "string",
+                "display_name": "association type",
+                "name": "inc_assoc_type"
+            },
+
+            {
+                "array": false,
+                "description": "association filter",
+                "tags": [ "incident" ],
+                "type": "string",
+                "display_name": "association filter",
+                "name": "inc_assoc_filter"
+            }
+
+    	]
+    }
+}

@@ -1,0 +1,44 @@
+{
+  "display_name": "Default Unity Instance ",
+  "description": "Default Unity Instance  ",
+  "author": "aw",
+  "body_class" : "com.aw.unity.json.JSONUnityInstance",
+  "body": {
+    "default_data_source" : "es",
+    "default_time_field" : "dg_time",
+	"data_sources" : [
+    	{
+		    "name": "es",
+		    "type": "com.aw.unity.es.ElasticUnityDataSource",
+
+		    "row_security_class": "com.aw.unity.security.SecRowDG",
+		    "column_security_class": "com.aw.unity.security.SecColumnDG",
+		    "role_resolver_class": "com.aw.unity.security.DataSecurityResolverDG",
+
+		    "index_map" : {
+
+		    	"incident" : "incidents",
+                "incident_assign": "incidents",
+		    	"incident_association": "incidents",
+                "incident_attachment": "incidents",
+		    	"incident_set_state": "incidents",
+                "incident_comment": "incidents",
+                "incident_create": "incidents",
+				"download_incident_attachment" : "incidents",
+
+                "platform_error": "errors",
+				"GameEvent" : "events_es",
+
+
+                "topic_status": "status",
+				"perf_stat": "status"
+
+		    },
+
+		    "default_index" : "events_es"
+		}
+
+    ]
+
+  }
+}

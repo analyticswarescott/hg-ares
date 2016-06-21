@@ -1,0 +1,17 @@
+{
+  "display_name": "Platform Status Poller",
+  "description": " This task prunes data per tenant periodically",
+  "author": "aw",
+  "scope": "all",
+  "body": {
+	"task_type" : "tenant_archive",
+	"name" : "Tenant archive task",
+	"memory_resource_weighting" : 0.01,
+	"cpu_resource_weighting": 0.01,
+	"schedule" : {
+		"type" : "recurring",
+		"recurrence_pattern" : "0 0 1 1/1 * ? *"
+	}
+  }
+}
+

@@ -1,0 +1,21 @@
+{
+  "display_name": " Example Shipped Filter",
+  "description": " desc ",
+  "author": "aw",
+  "body": {
+    "operator": "AND",
+    "filter": [
+      {
+        "col_name": "ot",
+        "operator": "IN",
+        "values": [
+          4
+        ],
+        "enabled": "true"
+      }
+    ]
+  }
+}
+
+
+

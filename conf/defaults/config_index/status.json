@@ -1,0 +1,134 @@
+{
+  "display_name": "topic status index settings",
+  "description": "The elasticsearch index settings for platform error",
+  "author": "aw",
+  "body": {
+
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "index": {
+        "analysis": {
+          "analyzer": {
+            "keylower": {
+              "tokenizer": "keyword",
+              "filter": "lowercase"
+            }
+          }
+        }
+      }
+    },
+
+    "mappings": {
+      "topic_status": {
+        "properties": {
+          "dg_guid": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "dg_time": {
+            "type": "date",
+            "format" : "epoch_millis"
+          },
+          "dg_tenant": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "stat_topic": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "stat_partition": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "stat_latest" : {
+          	"properties": {
+	          "stat_pos": {
+	            "type": "long"
+	          },
+	          "dg_time": {
+	            "type": "date",
+	            "format" : "epoch_millis"
+	          }
+          	}
+          },
+          "stat_processed" : {
+          	"properties": {
+	          "stat_pos": {
+	            "type": "long"
+	          },
+	          "dg_time": {
+	            "type": "date",
+            	"format" : "epoch_millis"
+	          }
+          	}
+          }
+        }
+      },
+	  "perf_stat" : {
+		  "properties": {
+			  "dg_guid": {
+				  "type": "string",
+				  "index": "not_analyzed"
+			  },
+			  "dg_time": {
+				  "type": "date",
+				  "format": "epoch_millis"
+			  },
+			  "stat_pct_cpu_used": {
+				  "type": "float"
+			  },
+			  "stat_pctmemused": {
+				  "type": "float"
+			  },
+			  "stat_pctswpused": {
+				  "type": "float"
+			  },
+			  "stat_pctiowait": {
+				  "type": "float"
+			  },
+			  "stat_net_usage": {
+				  "type" : "nested",
+				  "properties": {
+					  "stat_iface": {
+						  "type": "string"
+					  },
+					  "stat_rxkB": {
+						  "type": "float"
+					  }
+				  ,
+					  "stat_txkB": {
+						  "type": "float"
+					  }
+				  }
+			  },
+			  "stat_net_errors": {
+				  "type" : "nested",
+				  "properties": {
+					  "stat_iface": {
+						  "type": "string"
+					  },
+					  "stat_rxerr": {
+						  "type": "float"
+					  }
+				  ,
+					  "stat_txerr": {
+						  "type": "float"
+					  }
+				  }
+			  },
+			  "stat_hostname": {
+				  "type": "string"
+			  },
+			  "stat_diskfreepct": {
+				  "type": "float"
+			  }
+		  }
+
+	  }
+
+
+    }
+  }
+}

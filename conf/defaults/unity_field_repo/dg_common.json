@@ -1,0 +1,295 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "Common DG Fields",
+    "body": {"fields": [
+
+        {
+            "array": false,
+            "description": "globally unique id",
+            "tags": [ "common", "guid" ],
+            "type": "guid",
+            "display_name": "unique id",
+            "name": "dg_guid"
+        },
+        {
+            "array": false,
+            "description": "tenant id",
+            "tags": [ "common", "guid" ],
+            "type": "guid",
+            "display_name": "tenant id",
+            "name": "dg_tenant"
+        },
+        {
+            "array": false,
+            "description": "time something occurred",
+            "tags": [ "common", "time" ],
+            "type": "timestamp",
+            "display_name": "event time",
+            "name": "dg_time"
+        },
+        {
+            "array": false,
+            "description": "file path",
+            "tags": [ "common", "file", "path" ],
+            "type": "string",
+            "display_name": "file path",
+            "name": "dg_file_path"
+        },
+		{
+			"array": false,
+			"description": "file name",
+			"tags": [ "common", "file", "name" ],
+			"type": "string",
+			"display_name": "file name",
+			"name": "dg_file_name"
+		},
+        {
+            "display_name": "local modify time",
+            "array": false,
+            "tags": [],
+            "description": "local modify time",
+            "type": "timestamp",
+            "name": "dg_file_modify"
+        },
+        {
+            "display_name": "local creation time",
+            "array": false,
+            "tags": [],
+            "description": "local creation time",
+            "type": "timestamp",
+            "name": "dg_file_create"
+        },
+        {
+            "array": false,
+            "description": "file size",
+            "tags": [ "common", "file", "size" ],
+            "type": "long",
+            "display_name": "file size",
+            "name": "dg_file_size"
+        },
+        {
+            "array": false,
+            "description": "file md5 hash",
+            "tags": [ "common", "file", "hash", "md5" ],
+            "type": "guid",
+            "display_name": "file md5 hash",
+            "name": "dg_file_md5"
+        },
+        {
+            "array": false,
+            "description": "file sha1 hash",
+            "tags": [ "common", "file", "hash", "sha1" ],
+            "type": "guid",
+            "display_name": "file sha1 hash",
+            "name": "dg_file_sha1"
+        },
+        {
+            "array": false,
+            "description": "file sha256 hash",
+            "tags": [ "common", "file", "hash", "sha256" ],
+            "type": "guid",
+            "display_name": "file sha256 hash",
+            "name": "dg_file_sha256"
+        },
+        {
+            "array": true,
+            "description": "tags",
+            "tags": [ "common", "tag" ],
+            "type": "string",
+            "display_name": "tags",
+            "name": "dg_tags"
+        },
+        {
+            "array": false,
+            "description": "user",
+            "tags": [ "common", "user" ],
+            "type": "string",
+            "display_name": "user",
+            "name": "dg_user"
+        },
+        {
+            "array": false,
+            "description": "name",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "Name",
+            "name": "dg_name"
+        },
+        {
+            "array": false,
+            "description": "description",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "Description",
+            "name": "dg_description"
+        },
+        {
+            "array": false,
+            "description": "sequence number",
+            "tags": [ "common" ],
+            "type": "long",
+            "display_name": "Sequence Number",
+            "name": "dg_seq"
+        },
+        {
+            "array": false,
+            "description": "process flags",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "process flags",
+            "name": "dg_pf"
+        },
+        {
+            "array": false,
+            "description": "has file capture?",
+            "tags": [ "common" ],
+            "type": "boolean",
+            "display_name": "Has File Capture?",
+            "name": "dg_cf"
+        },
+        {
+            "array": false,
+            "description": "product name",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "product name",
+            "name": "dg_pn"
+        },
+        {
+            "array": false,
+            "description": "product version",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "product version",
+            "name": "dg_pv"
+        },
+        {
+            "array": false,
+            "description": "registry value",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "registry value",
+            "name": "dg_rv"
+        },
+        {
+            "array": false,
+            "description": "file version",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "file version",
+            "name": "dg_fv"
+        },
+        {
+            "array": false,
+            "description": "event type name",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "event type name",
+            "name": "eventType"
+        },
+        {
+            "array": false,
+            "description": "file extension",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "file extension",
+            "name": "dg_file_ext"
+        },
+        {
+            "array": false,
+            "description": "comment",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "comment",
+            "name": "dg_comment"
+        },
+        {
+            "array": false,
+            "description": "detection rule name",
+            "tags": [ "common", "alarm" ],
+            "type": "string",
+            "display_name": "detection rule name",
+            "name": "dg_det_name"
+        },
+        {
+            "array": false,
+            "description": "detection rule type",
+            "tags": [ "common", "alarm" ],
+            "type": "string",
+            "display_name": "detection rule type",
+            "name": "dg_det_type"
+        },
+        {
+            "array": false,
+            "description": "detection rule id",
+            "tags": [ "common", "alarm" ],
+            "type": "guid",
+            "display_name": "detection rule id",
+            "name": "dg_det_id"
+        },
+        {
+            "array": false,
+            "description": "alarm id",
+            "tags": [ "common", "alarm" ],
+            "type": "guid",
+            "display_name": "alarm id",
+            "name": "dg_alarm_id"
+        },
+        {
+            "array": true,
+            "description": "dg alert",
+            "tags": [ "common", "alert" ],
+            "type": "object",
+            "object_type" : "alert",
+            "display_name": "alert",
+            "name": "dg_alert"
+        },
+        {
+            "array": true,
+            "description": "dg custom data",
+            "tags": [ "common", "alert" ],
+            "type": "object",
+            "object_type" : "custom_data",
+            "display_name": "custom data",
+            "name": "dg_custom_data"
+        },
+        {
+            "array": true,
+            "description": "values",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "values",
+            "name": "dg_values"
+        },
+        {
+            "array": false,
+            "description": "type of data",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "type",
+            "name": "dg_type"
+        },
+        {
+            "array": false,
+            "description": "scope",
+            "tags": [ "common" ],
+            "type": "string",
+            "display_name": "scope",
+            "name": "dg_scope"
+        },
+
+        {
+            "array": true,
+            "description": "policy",
+            "tags": [ "common" ],
+            "type": "object",
+            "object_type": "policy",
+            "display_name": "policy",
+            "name": "dg_policy"
+        }
+
+
+        ]
+    }
+}

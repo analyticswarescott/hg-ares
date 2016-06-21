@@ -1,0 +1,23 @@
+{
+  "operation" : "CREATE",
+  "tid": "1",
+  "sn": "DEV",
+  "ln": "DEV",
+  "srv": "na",
+  "db": "na",
+  "ccs": "na",
+  "lc": "en-US",
+  "ob": false,
+  "mwa": "http://localhost:8080/rest/1.0/dgrest",
+  "env_overrides" : [
+     {"kafka_broker_list_host_and_port": ""},
+    {"zookeeper_host_and_port": ""},
+    {"tenant_id": ""},
+    {"tenant_reference_rest": ""},
+    {"hdfs_root": ""},
+    {"hdfs_conf_path": ""},
+    {"hdfs_raw_root_dir": ""},
+    {"elastic_server_address_or_ip": ""},
+    {"spark_master": ""}
+  ]
+}

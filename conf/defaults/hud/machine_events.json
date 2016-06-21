@@ -1,0 +1,63 @@
+{
+  "display_name": "HUD machine_events  ",
+  "description" : " desc ",
+  "author": "aw",
+  "body": {
+    "master_doc" : {
+      "global_filter_group": [],
+      "data_docs": [
+        {
+          "dataDocName": "machineEvents",
+          "data": {
+            "query_id": "query-query1"
+          }
+        }
+      ],
+      "layouts": [
+        {
+          "name": "display",
+          "gridsterOptions": {
+            "margins": [
+              20,
+              20
+            ],
+            "columns": 4,
+            "draggable": {
+              "handle": "h1"
+            }
+          },
+          "vizs": [
+            {
+              "chart_type": "configDefined",
+              "dataDocName": "machineEvents",
+              "drill_report_id": "investigation-event_detail",
+              "drill_report_name": "Event Detail",
+              "data_config": {
+                "sort": {
+                  "field": "c0",
+                  "dir": "asc"
+                }
+              },
+              "chart_config": {
+                "seriesDefaults": {
+                },
+                "series": [
+                  {
+                    "type": "bar",
+                    "field": "c0"
+                  }
+                ],
+                "categoryAxis": {
+                  "field": "c1",
+                  "labels": {
+                    "rotation": 0
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

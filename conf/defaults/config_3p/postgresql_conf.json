@@ -1,0 +1,8 @@
+{
+	"display_name": "postgresql.conf",
+	"description": "postgres config",
+	"author": "aw",
+	"body": {
+		"file_path": "config_db/postgresql.conf"
+	}
+}

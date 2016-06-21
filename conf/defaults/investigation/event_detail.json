@@ -1,0 +1,65 @@
+{
+  "display_name": "Investigation event_detail  ",
+  "description" : " desc ",
+  "author": "aw",
+  "body": {
+    "master_doc": {
+      "global_filter_group": [],
+      "data_docs": [
+        {
+          "dataDocName": "eventDetail",
+          "data": {
+            "query_id": "query-event_detail"
+          }
+        }
+      ],
+      "layouts": [
+        {
+          "name": "display",
+          "gridsterOptions": {
+            "columns": 5,
+            "draggable": {
+              "handle": "h1"
+            }
+          },
+          "vizs": [
+            {
+              "dataDocName": "eventDetailQuery",
+              "chart_type": "xfilter",
+              "viz_description": "Username",
+              "chart_config": {
+                "name": "Username",
+                "dcChartType": "pieChart",
+                "innerRadius": 30,
+                "dimFld": "c1",
+                "valFld": "c0",
+                "elasticX": false,
+                "elasticY": false,
+                "gridster": {
+                  "sizeX": 1
+                }
+              }
+            },
+            {
+              "dataDocName": "eventDetailQuery",
+              "chart_type": "xfilter",
+              "viz_description": "Network Address",
+              "chart_config": {
+                "name": "Network address",
+                "dcChartType": "pieChart",
+                "innerRadius": 30,
+                "dimFld": "c2",
+                "valFld": "c0",
+                "elasticX": false,
+                "elasticY": false,
+                "gridster": {
+                  "sizeX": 1
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

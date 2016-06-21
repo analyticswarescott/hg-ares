@@ -1,0 +1,71 @@
+{
+  "display_name": "A sample rule",
+  "description": "This sample rule creates a critical incident when a process is involved in a violation whose name (pn) contains the word nvidia, except cases where it also contains excel.",
+  "author": "aw",
+  "body_class" : "com.aw.compute.detection.SimpleRule",
+  "body": {
+
+  	"severity" : 75,
+
+    "filter" : {
+
+        "field" : "dg_pn",
+        "operator" : "contains",
+        "values" : [ "nvidia" ]
+
+    },
+
+    "exclusions" : [
+
+        {
+	        "field" : "dg_pn",
+	        "operator" : "contains",
+	        "values" : [ "excel" ]
+        }
+
+    ],
+
+    "actions" : [
+
+        {
+            "a_type" : "incident_create",
+            "dg_comment" : "incident created from sample_rule_id",
+            "inc_incident" : {
+
+                "inc_sev" : "critical",
+                "dg_name" : "sample rule: nvidia stuff detected",
+                "dg_description" : "nvidia stuff was detected - that man is playing galaga dg_pn=${event.dg_pn}",
+                "inc_ctype" : "automatic",
+                "dg_tags" : [ "nvidia", "virus", "sample" ]
+
+            }
+        },
+
+        {
+            "a_type" : "incident_comment",
+            "dg_comment" : "test comment for incident description=${incident.description}"
+        },
+
+        {
+            "a_type" : "incident_set_state",
+            "dg_comment" : "closing incident ${incident.dg_name}",
+            "inc_state" : "closed"
+        },
+
+        {
+            "a_type" : "alarm_create"
+        },
+
+        {
+            "a_type" : "alarm_association"
+        }
+
+    ],
+
+    "tags" : [
+        "tag1",
+        "tag2"
+    ]
+
+  }
+}

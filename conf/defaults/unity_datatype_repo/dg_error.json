@@ -1,0 +1,37 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "error type",
+    "body": {
+        "resolvers": [],
+        "types": [
+
+            {
+                "name": "platform_error",
+                "display_name": "Platform Error",
+                "id_field" : "dg_guid",
+                "description": "Platform errors",
+                "field_refs": [
+
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "dg_user" },
+                    { "name": "dg_tenant" },
+                    { "name": "err_type" },
+                    { "name": "err_stack" },
+                    { "name": "err_role" },
+                    { "name": "err_related" },
+                    { "name": "err_msg" },
+                    { "name": "err_host" },
+                    { "name": "dg_tags" }
+
+                ],
+                "tags" : [
+                    "system", "error"
+                ]
+
+            }
+
+       ]
+    }
+}

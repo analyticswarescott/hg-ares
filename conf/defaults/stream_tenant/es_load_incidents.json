@@ -1,0 +1,20 @@
+{
+	"display_name": "Load Elastic",
+	"description": "desc",
+	"author": "aw",
+	"body_class": "com.aw.common.spark.StreamDef",
+	"body": {
+		"tenant": true,
+		"system": true,
+		"target_driver": "driver30sec",
+		"processor_id": "es_load_incidents",
+		"source_topic": [
+			"incident",
+			"action"
+		],
+		"config_data": {
+			"processor_class": "com.aw.compute.streams.processor.GenericESProcessor",
+			"index_name": "incidents"
+		}
+	}
+}

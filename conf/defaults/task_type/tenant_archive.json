@@ -1,0 +1,9 @@
+{
+  "display_name": "Tenant archive task",
+  "description": " Archives processed files for a tenant",
+  "author": "aw",
+  "body": {
+	"class_type": "com.aw.common.task.TenantArchiveTask"
+  }
+}
+

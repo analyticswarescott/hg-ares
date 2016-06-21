@@ -1,0 +1,15 @@
+{
+  "display_name": "Platform Status Poller",
+  "description": " This task source generates the platform status poller task, used by the system to monitor status",
+  "author": "aw",
+  "scope" : "system",
+  "body": {
+	"task_type" : "platform_status",
+	"name" : "platform status poller",
+	"memory_resource_weighting" : 0.01,
+	"cpu_resource_weighting": 0.01,
+	"schedule" : { "type" : "perpetual" },
+	"config" : {}
+  }
+}
+

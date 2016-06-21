@@ -1,0 +1,70 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "perf stat type",
+    "body": {
+        "resolvers": [],
+        "types": [
+
+			{
+				"name": "stat_net_usage",
+				"display_name": "Network Usage Snapshot",
+				"id_field" : "dg_guid",
+				"description": "network usage",
+				"field_refs": [
+
+					{ "name": "stat_iface" },
+					{ "name": "stat_rxkB" },
+					{ "name": "stat_txkB" }
+				],
+				"tags" : [
+					"system"
+				]
+
+			},
+			{
+				"name": "stat_net_errors",
+				"display_name": "Network Errors Snapshot",
+				"id_field" : "dg_guid",
+				"description": "network errors",
+				"field_refs": [
+
+					{ "name": "stat_iface" },
+					{ "name": "stat_rxerr" },
+					{ "name": "stat_txerr" }
+				],
+				"tags" : [
+					"system"
+				]
+
+			},
+            {
+                "name": "perf_stat",
+                "display_name": "Performance Stat Snapshot",
+                "id_field" : "dg_guid",
+                "description": "node performance stats",
+                "field_refs": [
+
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "stat_pct_cpu_used" },
+					{ "name": "stat_pctmemused" },
+					{ "name": "stat_pctswpused" },
+					{ "name": "stat_pctiowait" },
+					{ "name": "stat_diskfreepct" },
+					{ "name": "stat_hostname" },
+					{ "name": "stat_net_usage" },
+					{ "name": "stat_net_errors" },
+					{ "name": "stat_node_roles" }
+
+                ],
+                "tags" : [
+                    "system"
+                ]
+
+            }
+
+
+       ]
+    }
+}

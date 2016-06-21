@@ -1,0 +1,18 @@
+{
+	"display_name": "Load Events to ES  ",
+	"description": " desc ",
+	"author": "aw",
+	"body_class": "com.aw.common.spark.StreamDef",
+	"body": {
+		"tenant": true,
+		"system": false,
+		"target_driver": "driver30sec",
+		"processor_id": "events_es",
+		"optimal_events_per_task" : 10000,
+		"source_topic": ["events_es"],
+		"config_data": {
+			"processor_class": "com.aw.compute.streams.processor.GenericESProcessor",
+			"index_name": "events_es"
+		}
+	}
+}

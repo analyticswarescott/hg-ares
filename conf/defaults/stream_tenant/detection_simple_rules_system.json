@@ -1,0 +1,22 @@
+{
+	"display_name": "Simple Rules - All - system",
+	"description": "desc",
+	"author": "aw",
+	"body_class": "com.aw.common.spark.StreamDef",
+	"body": {
+		"tenant": false,
+		"system": true,
+		"target_driver": "driver30sec",
+		"processor_id": "detection_simple_rules_system",
+		"source_topic": [
+			"errors",
+			"perf_stat",
+			"topic_status",
+			"action",
+			"incident"
+		],
+		"config_data": {
+			"processor_class": "com.aw.compute.detection.SimpleRuleProcessor"
+		}
+	}
+}

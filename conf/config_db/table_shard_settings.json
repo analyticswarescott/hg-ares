@@ -1,0 +1,16 @@
+{
+	"sharded_tables": [
+		{
+			"table_name": "document",
+			"shard_column": "type",
+			"shard_method": "hash",
+			"shards_per_worker": 2
+		},
+		{
+			"table_name": "document_tag",
+			"shard_column": "type",
+			"shard_method": "hash",
+			"shards_per_worker": 2
+		}
+	]
+}

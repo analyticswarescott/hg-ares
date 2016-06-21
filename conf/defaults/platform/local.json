@@ -1,0 +1,134 @@
+
+{
+	"display_name": "local platform",
+	"description": "local platform",
+	"author": "aw",
+	"body_class" : "com.aw.platform.DefaultPlatform",
+	"body": {
+
+		"settings": {
+
+			"config_db_master": {
+				"master_db_port" : 5432,
+				"target_replication" : 1,
+				"conf_dir" : "/var/lib/pgsql/9.5/data"
+			},
+			"config_db_worker": {
+				"worker_db_port": 5432
+			},
+
+			"zookeeper": {
+				"port": 2181,
+				"dg_root_node" : "/aw",
+				"configuration" : {
+					"maxClientCnxns" : 70
+				},
+				"peer_port" : 2888,
+				"leader_elect_port" : 3888,
+				"log4j_overrides" : {
+				}
+			},
+
+			"elasticsearch" : {
+				"cluster_name" : "aw",
+				"es_transport_port": 9300,
+				"port": 9200,
+				"es_heap_size" : "1g"
+			},
+
+			"node" : {
+				"port": 9100,
+				"stat_collect_interval" : 1
+			},
+
+			"hdfs_name" : {
+				"dfs_replication" : 3,
+				"port": 9000,
+				"web_ui_port" : 50070,
+				"hdfs_root_path" : "/",
+				"ha_cluster_name" : "localhost"
+			},
+
+			"hdfs_journal": {
+				"port": 8485
+			},
+
+			"kafka" : {
+				"default_replication" : 3,
+				"port": 9092,
+				"configuration" : {
+					"num.network.threads" : 4
+				}
+			},
+
+			"spark_master": {
+				"spark_master_port": "7077",
+				"spark_rest_port": "6066",
+				"spark_master_ui_port": "8888",
+				"log4j_overrides" : {
+					"log4j.logger.com.aw.compute" : "INFO",
+					"log4j.logger.com.aw.compute.streams.processor.framework.ProcessorFunction" : "DEBUG"
+				},
+				"spark_daemon_java_opts": {
+					"spark.deploy.recoveryMode" : "ZOOKEEPER",
+					"spark.deploy.zookeeper.url" : "localhost"
+				}
+
+			},
+
+			"spark_worker": {
+				"spark_env": {
+					"spark_worker_cores": 8,
+					"spark_worker_memory": "8g"
+				},
+				"web_ui_port" : 8082,
+				"spark_daemon_java_opts": {
+				}
+			},
+
+			"rest": {
+				"port": 8080,
+				"local_file_cache_path" : "/data/hdfs_cache",
+				"driver_report_timeout" : 10,
+				"driver_submit_timeout" : 30
+			}
+
+		},
+
+		"nodes": {
+
+			"localhost": {
+
+				"elasticsearch": {},
+
+				"kafka": {
+					"broker_id" : 0
+				},
+
+				"hdfs_name": {},
+
+				"hdfs_data": {},
+
+				"hdfs_journal": {},
+
+				"zookeeper": {
+					"server_id" : 1
+				},
+
+				"spark_master": {},
+
+				"spark_worker": {},
+
+				"rest": {},
+
+				"config_db_master": {},
+				"config_db_worker": {},
+
+				"node": {}
+
+			}
+
+		}
+
+	}
+}

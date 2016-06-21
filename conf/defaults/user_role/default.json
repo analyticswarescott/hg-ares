@@ -1,0 +1,8 @@
+{
+	"display_name": "Default User Roles With Name ",
+	"description" : "Default User Roles With Name ",
+	"author": "aw",
+	"body": {
+		"permissions" : [  { "name" : "See test Data" } ]
+	}
+}

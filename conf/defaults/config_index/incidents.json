@@ -1,0 +1,425 @@
+{
+  "display_name": "Incident index settings",
+  "description": "The elasticsearch index settings for incidents and all related data",
+  "author": "aw",
+  "body": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "index": {
+        "analysis": {
+          "analyzer": {
+            "default": {
+              "tokenizer": "keyword",
+              "filter": "lowercase"
+            }
+          }
+        }
+      }
+    },
+    "mappings": {
+      "incident": {
+        "properties": {
+          "inc_name": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "dg_guid": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "inc_state": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "inc_creator": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "dg_user": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "dg_time": {
+            "type": "date",
+            "format" : "epoch_millis"
+          },
+          "inc_mtime": {
+            "type": "date",
+            "format" : "epoch_millis"
+          },
+          "inc_sev": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "inc_sev_score": {
+            "type": "integer",
+            "index": "not_analyzed"
+          },
+          "inc_ccomment": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "dg_tags": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "inc_ctype": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "inc_comments": {
+             "type" : "nested",
+             "include_in_parent": true,
+             "properties": {
+                "inc_com_user"  : { "type" : "string",  "index" : "not_analyzed" },
+                "inc_com_time" : { "type" : "date",   "format" : "epoch_millis" },
+                "dg_comment"   : { "type" : "string",  "index" : "not_analyzed" }
+             }
+          }
+        }
+      },
+
+      "incident_association": {
+        "properties": {
+          "dg_guid": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+           "dg_user": {
+              "type": "string",
+             "index": "not_analyzed"
+           },
+          "dg_time": {
+            "type": "date",
+            "format" : "epoch_millis"
+          },
+          "inc_guid": {
+            "type": "string",
+            "index": "not_analyzed"
+           },
+           "inc_assoc_id": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "inc_assoc_type": {
+             "type": "string",
+             "index" : "not_analyzed"
+           },
+           "inc_ctype": {
+              "type": "string",
+             "index": "not_analyzed"
+           },
+           "dg_tags": {
+              "type": "string",
+             "index": "not_analyzed"
+           }
+        }
+      },
+
+      "incident_create": {
+        "properties": {
+          "dg_guid": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "dg_time": {
+            "type": "date",
+            "format" : "epoch_millis"
+          },
+          "inc_guid": {
+            "type": "string",
+            "index": "not_analyzed"
+           },
+           "dg_user": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "inc_ctype": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "dg_comment": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+	      "inc_incident": {
+            "type" : "nested",
+	        "properties": {
+	          "inc_name": {
+	            "type": "string",
+	            "index": "not_analyzed"
+	          },
+	          "dg_guid": {
+	            "type": "string",
+	            "index": "not_analyzed"
+	          },
+	          "inc_state": {
+	            "type": "string",
+	            "index": "not_analyzed"
+	          },
+	          "inc_creator": {
+	            "type": "string",
+	            "index": "not_analyzed"
+	          },
+	          "dg_user": {
+	            "type": "string",
+	            "index": "not_analyzed"
+	          },
+	          "dg_time": {
+	            "type": "date",
+	            "format" : "epoch_millis"
+	          },
+	          "inc_mtime": {
+	            "type": "date",
+	            "format" : "epoch_millis"
+	          },
+	          "inc_sev": {
+	            "type": "string",
+	            "index": "not_analyzed"
+	          },
+	          "inc_ccomment": {
+	            "type": "string",
+	            "index": "not_analyzed"
+	          },
+	          "dg_tags": {
+	            "type": "string",
+	            "index": "not_analyzed"
+	          },
+	          "inc_ctype": {
+	            "type": "string",
+	            "index": "not_analyzed"
+	          },
+	          "inc_comments": {
+	             "type" : "nested",
+	             "include_in_parent": true,
+	             "properties": {
+	                "inc_com_user"  : { "type" : "string",  "index" : "not_analyzed" },
+	                "inc_com_time" : { "type" : "date",   "format" : "epoch_millis" },
+	                "dg_comment"   : { "type" : "string",  "index" : "not_analyzed" }
+	             }
+	          }
+	        }
+	      }
+        }
+      },
+
+      "incident_assign": {
+        "properties": {
+          "dg_guid": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "dg_time": {
+            "type": "date",
+            "format" : "epoch_millis"
+          },
+           "dg_user": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "a_type": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "inc_guid": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "inc_ctype": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "dg_comment": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "inc_assign": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "dg_tags": {
+             "type": "string",
+             "index": "not_analyzed"
+           }
+         }
+       },
+
+      "incident_set_state": {
+        "properties": {
+          "dg_guid": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "dg_time": {
+            "type": "date",
+            "format" : "epoch_millis"
+          },
+           "dg_user": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "a_type": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "inc_guid": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "inc_ctype": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "dg_comment": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "inc_state": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "dg_tags": {
+             "type": "string",
+             "index": "not_analyzed"
+           }
+         }
+       },
+
+      "incident_comment": {
+        "properties": {
+          "dg_guid": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "dg_time": {
+            "type": "date",
+            "format" : "epoch_millis"
+          },
+           "dg_user": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "a_type": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "inc_guid": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "inc_ctype": {
+             "type": "string",
+             "index": "not_analyzed"
+           },
+           "dg_comment": {
+             "type": "string",
+             "index": "not_analyzed"
+           }
+         }
+       },
+
+	  "incident_attachment": {
+	  	"properties": {
+	  	  "dg_guid": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+	  	  "dg_time": {
+	  	  	"type": "date",
+	  	  	"format" : "epoch_millis"
+	  	  },
+	  	  "inc_guid": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+	  	  "dg_user": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+	  	  "inc_ctype": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+	  	  "dg_tags": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+	  	  "dg_name": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+		  "dg_description": {
+		  	"type": "string",
+		  	"index": "not_analyzed"
+		  },
+		  "dg_file_path": {
+		  	"type": "string",
+		  	"index": "not_analyzed"
+		  },
+		  "dg_file_name": {
+		  	"type": "string",
+		  	"index": "not_analyzed"
+		  },
+		  "a_type": {
+		  	"type": "string",
+		  	"index": "not_analyzed"
+		  },
+		  "dg_comment": {
+		  	"type": "string",
+		  	"index": "not_analyzed"
+		  }
+	  	}
+	  },
+
+	  "download_incident_attachment": {
+	  	"properties": {
+	  	  "dg_guid": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+	  	  "dg_time": {
+	  	  	"type": "date",
+	  	  	"format" : "epoch_millis"
+	  	  },
+	  	  "inc_guid": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+	  	  "dg_user": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+	  	  "inc_ctype": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+	  	  "dg_tags": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+	  	  "dg_name": {
+	  	  	"type": "string",
+	  	  	"index": "not_analyzed"
+	  	  },
+		  "dg_description": {
+		  	"type": "string",
+		  	"index": "not_analyzed"
+		  },
+		  "a_type": {
+		  	"type": "string",
+		  	"index": "not_analyzed"
+		  },
+		  "a_guid": {
+		  	"type": "string",
+		  	"index": "not_analyzed"
+		  },
+		  "dg_comment": {
+		  	"type": "string",
+		  	"index": "not_analyzed"
+		  }
+	  	}
+	  }
+    }
+  }
+}

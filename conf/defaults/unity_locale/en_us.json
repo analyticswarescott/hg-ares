@@ -1,0 +1,41 @@
+{
+  "display_name": "Unity locale en-us ",
+  "description" : "Unity locale en-us ",
+  "author": "aw",
+  "body": {
+    "meta": {
+      "tbl.dlp.machineeventdlp.title": "Machine event DLP",
+      "tbl.dlp.machineeventdlp.description": "This table contains critical information about the usage of your system",
+      "tbl.dlp.machineeventdlp.column.meid.title": "Machine event ID",
+      "tbl.dlp.machineeventdlp.column.lp.title": "Local port",
+      "tbl.dlp.machineeventdlp.column.dn.title": "User domain",
+      "tbl.dlp.machineeventdlp.column.un.title": "Username",
+      "tbl.dlp.machineeventdlp.column.aa.title": "Has alert",
+      "tbl.dlp.machineeventdlp.column.in_.title": "Process name",
+      "tbl.dlp.machineeventdlp.column.ra.title": "Network address",
+      "tbl.dlp.machineeventdlp.column.ot_desc.title": "Event type",
+      "tbl.dlp.machineeventdlp.column.event_count.title": "Event count",
+      "tbl.dlp.machineeventdlp.column.sfn.title": "Source file name",
+      "tbl.dlp.machineeventdlp.column.sfd.title": "Source file directory",
+      "tbl.dlp.machineeventdlp.column.sfe.title": "Source file extension",
+      "tbl.dlp.machineeventdlp.column.dfn.title": "Destination file name",
+      "tbl.dlp.machineeventdlp.column.dfd.title": "Destination file directory",
+      "tbl.dlp.machineeventdlp.column.dfe.title": "Destination file extension",
+      "tbl.dlp.machineeventdlp.group.userfiles.title": "Users x Files",
+      "tbl.dlp.machineeventdlp.group.userfiles.description": "Users x Files",
+      "tbl.dlp.machineeventdlp.group.userbytes.title": "Users x Bytes",
+      "tbl.dlp.machineeventdlp.group.userbytes.description": "Users x Bytes",
+      "tbl.dlp.machineeventdlp.group.users.title": "Users",
+      "tbl.dlp.machineeventdlp.group.users.description": "Users",
+      "tbl.dlp.machineeventdlp.group.sourcefiles.title": "Source files",
+      "tbl.dlp.machineeventdlp.group.sourcefiles.description": "Source files",
+      "tbl.dlp.machineeventdlp.group.destinationfiles.title": "Destination files",
+      "tbl.dlp.machineeventdlp.group.destinationfiles.description": "Destination files",
+      "tbl.dlp.machineeventdlp.group.bytes.title": "Bytes",
+      "tbl.dlp.machineeventdlp.group.bytes.description": "Bytes",
+      "tbl.dlp.machineeventdlp.group.events.title": "Events",
+      "tbl.dlp.machineeventdlp.group.events.description": "Events",
+      "tbl.otherns.othername.column.other.description": "Example"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "display_name": "Stream Driver 30 second batch  ",
+  "description": " desc ",
+  "author": "aw",
+  "body_class" : "com.aw.common.spark.DriverDef",
+  "body": {
+    "enabled": "true",
+    "supervise" : "true",
+    "driver_class": "com.aw.compute.streams.drivers.KafkaDriver",
+    "batch_inteval_seconds": "5",
+    "heartbeat_interval" : "3",
+    "work_poll_interval" : "15",
+    "work_poll_delay" : "5",
+    "spark_executor_memory" : "4g",
+    "spark_executor_cores": "4",
+    "spark_config_options": {
+      "spark.default.parallelism": 4,
+      "spark.scheduler.mode" : "FAIR",
+      "spark.streaming.concurrentJobs" : 6,
+      "spark.ui.showConsoleProgress" : "false"
+    }
+  }
+}
+

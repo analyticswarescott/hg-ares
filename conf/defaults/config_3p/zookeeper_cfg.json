@@ -1,0 +1,8 @@
+{
+	"display_name": "zoo.cfg ",
+	"description": "Zookeeper settings ",
+	"author": "aw",
+	"body": {
+		"file_contents": "# The number of milliseconds of each tick\ntickTime=2000\n# The number of ticks that the initial\n# synchronization phase can take\ninitLimit=10\n# The number of ticks that can pass between\n# sending a request and getting an acknowledgement\nsyncLimit=5\n# the directory where the snapshot is stored.\n# do not use /tmp for storage, /tmp here is just\n# example sakes.\ndataDir=/opt/dg/data/zookeeper\n# the port at which the clients will connect\nclientPort=2181\n# the maximum number of client connections.\n# increase this if you need to handle more clients\nmaxClientCnxns=60\n#\n# Be sure to read the maintenance section of the\n# administrator guide before turning on autopurge.\n#\n# http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance\n#\n# The number of snapshots to retain in dataDir\n#autopurge.snapRetainCount=3\n# Purge task interval in hours\n# Set to \"0\" to disable auto purge feature\n#autopurge.purgeInterval=1"
+	}
+}

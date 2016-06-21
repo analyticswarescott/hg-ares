@@ -1,0 +1,33 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "status types",
+    "body": {
+        "resolvers": [],
+        "types": [
+
+            {
+                "name": "topic_status",
+                "display_name": "topic status",
+                "id_field" : "dg_guid",
+                "description": "tenant topic status",
+                "field_refs": [
+
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "dg_tenant" },
+                    { "name": "stat_topic" },
+                    { "name": "stat_partition" },
+                    { "name": "stat_latest_pos", "path" : [ "stat_latest", "stat_pos" ] },
+                    { "name": "stat_processed_pos", "path" : [ "stat_processed", "stat_pos" ] }
+
+                ],
+                "tags" : [
+                    "system", "status"
+                ]
+
+            }
+
+       ]
+    }
+}

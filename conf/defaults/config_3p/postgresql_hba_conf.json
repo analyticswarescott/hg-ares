@@ -1,0 +1,8 @@
+{
+	"display_name": "pg_hba.conf",
+	"description": "postgres host based authentication config",
+	"author": "aw",
+	"body": {
+		"file_path": "config_db/pg_hba.conf"
+	}
+}

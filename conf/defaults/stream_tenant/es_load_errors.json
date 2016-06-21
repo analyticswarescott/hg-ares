@@ -1,0 +1,19 @@
+{
+	"display_name": "load platform errors - global error stream",
+	"description": "desc",
+	"author": "aw",
+	"body_class": "com.aw.common.spark.StreamDef",
+	"body": {
+		"tenant": true,
+		"system": true,
+		"target_driver": "driver30sec",
+		"processor_id": "es_load_errors",
+		"source_topic": [
+			"errors"
+		],
+		"config_data": {
+			"processor_class": "com.aw.compute.streams.processor.GenericESProcessor",
+			"index_name": "errors"
+		}
+	}
+}

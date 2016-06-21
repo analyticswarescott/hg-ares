@@ -1,0 +1,8 @@
+{
+	"display_name": "Spark log4j ",
+	"description": "Spark log4j ",
+	"author": "aw",
+	"body": {
+		"file_contents": "# Set everything to be logged to the console\nlog4j.rootCategory=WARN, console\nlog4j.appender.console=org.apache.log4j.ConsoleAppender\nlog4j.appender.console.target=System.err\nlog4j.appender.console.layout=org.apache.log4j.PatternLayout\nlog4j.appender.console.layout.ConversionPattern=%d{yy/MM/dd HH:mm:ss} %p %c{1}: %m%n\n\n# Settings to quiet third party logs that are too verbose\nlog4j.logger.org.spark-project.jetty=WARN\nlog4j.logger.org.spark-project.jetty.util.component.AbstractLifeCycle=ERROR\nlog4j.logger.org.apache.spark.repl.SparkIMain$exprTyper=INFO\nlog4j.logger.org.apache.spark.repl.SparkILoop$SparkILoopInterpreter=INFO\nlog4j.logger.org.apache.parquet=ERROR\nlog4j.logger.parquet=ERROR\n\n#standard squelch items\nlog4j.logger.org.apache.spark.deploy.rest=INFO\nlog4j.logger.com.aw.utils.kafka=WARN\nlog4j.logger.org.apache.zookeeper.ClientCnxn=ERROR\nlog4j.logger.com.aw.auth=ERROR\n\n# DG streaming log verbosity settings\nlog4j.logger.com.aw.unity=INFO\nlog4j.logger.com.aw.compute=INFO\nlog4j.logger.com.aw.compute.streams.offset.OffsetWriter=WARN\nlog4j.logger.com.aw.compute.streams.offset.OffsetManager=WARN\nlog4j.logger.com.aw.compute.streams.processor.framework.ProcessorFunction=INFO\n\n\n\n\n\n# SPARK-9183: Settings to avoid annoying messages when looking up nonexistent UDFs in SparkSQL with Hive support\nlog4j.logger.org.apache.hadoop.hive.metastore.RetryingHMSHandler=FATAL\nlog4j.logger.org.apache.hadoop.hive.ql.exec.FunctionRegistry=ERROR"
+	}
+}

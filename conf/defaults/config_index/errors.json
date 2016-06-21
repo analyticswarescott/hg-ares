@@ -1,0 +1,43 @@
+{
+  "display_name": "Platform error index settings",
+  "description": "The elasticsearch index settings for platform error",
+  "author": "aw",
+  "body": {
+
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1,
+      "index": {
+        "analysis": {
+          "analyzer": {
+            "keylower": {
+              "tokenizer": "keyword",
+              "filter": "lowercase"
+            }
+          }
+        }
+      }
+    },
+
+    "mappings": {
+      "platform_error": {
+        "properties": {
+          "dg_guid": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "dg_time": {
+            "type": "date",
+            "format" : "epoch_millis"
+          },
+          "dg_user": {
+            "type": "string",
+            "index": "not_analyzed"
+          }
+        }
+      }
+
+
+    }
+  }
+}

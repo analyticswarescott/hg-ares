@@ -1,0 +1,201 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "Incident data types",
+    "version_date": "2015-11-24 05:11:59.079 -0800",
+    "body": {
+        "resolvers": [],
+        "types": [
+
+            {
+                "name": "inc_comments",
+                "field_refs" : [
+                    { "name": "inc_com_user" },
+                    { "name": "inc_com_time" },
+                    { "name": "dg_comment" }
+                ],
+                "tags" : [
+                    "incident"
+                ]
+            },
+
+            {
+                "name": "incident",
+                "display_name": "Incident",
+                "id_field" : "dg_guid",
+                "description": "Incident",
+                "field_refs": [
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "dg_name" },
+                    { "name": "dg_description" },
+                    { "name": "inc_state" },
+                    { "name": "inc_creator" },
+                    { "name": "dg_user" },
+                    { "name": "inc_mtime" },
+                    { "name": "inc_sev" },
+                    { "name": "inc_sev_score" },
+                    { "name": "inc_assign" },
+                    { "name": "inc_ctype" },
+                    { "name": "inc_ccomment" },
+                    { "name": "dg_tags" }
+                ],
+                "tags" : [
+                    "incident"
+                ]
+            },
+
+            {
+                "name": "incident_association",
+                "display_name": "Association",
+                "id_field" : "dg_guid",
+                "description": "Incident Association",
+                "field_refs": [
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "inc_guid" },
+                    { "name": "inc_assoc_id" },
+                    { "name": "dg_user" },
+                    { "name": "inc_assoc_type" },
+                    { "name": "inc_assoc_filter" },
+                    { "name": "inc_ctype" },
+                    { "name": "dg_tags" },
+					{ "name": "a_type" }
+                ],
+                "tags" : [
+                    "incident"
+                ]
+            },
+
+            {
+                "name": "incident_attachment",
+                "display_name": "Attachment",
+                "id_field" : "dg_guid",
+                "description": "Incident Attachment",
+                "field_refs": [
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "inc_guid" },
+                    { "name": "dg_user" },
+                    { "name": "inc_ctype" },
+                    { "name": "dg_tags" },
+                    { "name": "dg_name" },
+                    { "name": "dg_description" },
+                    { "name": "dg_file_path" },
+                    { "name": "dg_file_name" },
+					{ "name": "a_type" },
+					{ "name": "dg_comment" }
+                ],
+                "tags" : [
+                    "incident"
+                ]
+            },
+
+            {
+                "name": "download_incident_attachment",
+                "display_name": "Attachment",
+                "id_field" : "dg_guid",
+                "description": "Incident Attachment",
+                "field_refs": [
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "inc_guid" },
+                    { "name": "dg_user" },
+                    { "name": "inc_ctype" },
+                    { "name": "dg_tags" },
+                    { "name": "dg_name" },
+                    { "name": "dg_description" },
+					{ "name": "a_type" },
+					{ "name": "a_guid" },
+					{ "name": "dg_comment" }
+                ],
+                "tags" : [
+                    "incident"
+                ]
+            },
+
+            {
+                "name": "incident_create",
+                "display_name": "Create Incident",
+                "id_field" : "dg_guid",
+                "description": "Create Incident Action",
+                "field_refs": [
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "dg_user" },
+                    { "name": "a_type" },
+                    { "name": "inc_guid" },
+                    { "name": "inc_ctype" },
+                    { "name": "dg_comment" },
+                    { "name": "inc_incident" },
+                    { "name": "dg_tags" }
+                ],
+                "tags" : [
+                    "incident"
+                ]
+            },
+
+            {
+                "name": "incident_assign",
+                "display_name": "Assign Incident",
+                "id_field" : "dg_guid",
+                "description": "Assign Incident Action",
+                "field_refs": [
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "dg_user" },
+                    { "name": "a_type" },
+                    { "name": "inc_guid" },
+                    { "name": "inc_ctype" },
+                    { "name": "dg_comment" },
+                    { "name": "inc_assign" },
+                    { "name": "dg_tags" }
+                ],
+                "tags" : [
+                    "incident"
+                ]
+            },
+
+            {
+                "name": "incident_set_state",
+                "display_name": "Set Incident State",
+                "id_field" : "dg_guid",
+                "description": "Set Incident State Action",
+                "field_refs": [
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "dg_user" },
+                    { "name": "a_type" },
+                    { "name": "inc_guid" },
+                    { "name": "inc_ctype" },
+                    { "name": "dg_comment" },
+                    { "name": "inc_state" },
+                    { "name": "dg_tags" }
+                ],
+                "tags" : [
+                    "incident"
+                ]
+            },
+
+            {
+                "name": "incident_comment",
+                "display_name": "Add Incident Comment",
+                "id_field" : "dg_guid",
+                "description": "Add incident comment action",
+                "field_refs": [
+                    { "name": "dg_guid" },
+                    { "name": "dg_time" },
+                    { "name": "dg_user" },
+                    { "name": "dg_comment" },
+                    { "name": "a_type" },
+                    { "name": "inc_guid" },
+                    { "name": "inc_ctype" }
+                ],
+                "tags" : [
+                    "incident"
+                ]
+            }
+
+        ]
+    }
+}

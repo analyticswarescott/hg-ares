@@ -1,0 +1,9 @@
+{
+  "display_name": "Tenant prune task",
+  "description": " This task type prunes tenant data based on retention settings and disk usage",
+  "author": "aw",
+  "body": {
+	"class_type": "com.aw.common.task.TenantPruneTask"
+  }
+}
+

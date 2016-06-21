@@ -1,0 +1,8 @@
+{
+	"display_name": "Default User Settings With Name ",
+	"description" : "Default User Settings With Name ",
+	"author": "aw",
+	"body": {
+		"default_workspace_name": "default"
+	}
+}

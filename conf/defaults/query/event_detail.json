@@ -1,0 +1,43 @@
+{
+  "display_name": "Query event_detail ",
+  "description" : " desc ",
+  "author": "aw",
+  "body": {
+    "detail": true,
+    "top": 25,
+    "count_only": false,
+    "data_types": [
+        "user_file_copy"
+    ],
+    "attributes": [
+        {
+            "field": "in",
+            "sort": "asc",
+            "agg": "none"
+        },
+        {
+            "field": "un",
+            "sort": "asc",
+            "agg": "none"
+        },
+        {
+            "field": "*",
+            "sort": "asc",
+            "agg": "count"
+        }
+    ],
+    "filter": {
+        "operator": "AND",
+        "filter": [
+            {
+                "field": "in",
+                "operator": "in",
+                "values": [
+                    "chrome.exe"
+                ],
+                "enabled": true
+            }
+        ]
+    }
+}
+}

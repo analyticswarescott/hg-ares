@@ -1,0 +1,122 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "Perf Stats fields",
+    "version_date": "2015-11-23 07:38:11.028 -0800",
+    "body": {"fields": [
+
+        {
+            "array": false,
+            "description": "Percent CPU used",
+            "tags": [ "system" ],
+            "type": "float",
+            "display_name": "Percent CPU used",
+            "name": "stat_pct_cpu_used"
+        },
+		{
+			"array": false,
+			"description": "Percent Memory used",
+			"tags": [ "system" ],
+			"type": "float",
+			"display_name": "Percent memory used",
+			"name": "stat_pctmemused"
+		},
+		{
+			"array": false,
+			"description": "Percent Swap used",
+			"tags": [ "system" ],
+			"type": "float",
+			"display_name": "Percent Swap used",
+			"name": "stat_pctswpused"
+		},
+		{
+			"array": false,
+			"description": "Percent IO Wait",
+			"tags": [ "system" ],
+			"type": "float",
+			"display_name": "Percent of processors waiting on IO",
+			"name": "stat_pctiowait"
+		},
+		{
+			"array": false,
+			"description": "Network In Per second",
+			"tags": [ "system" ],
+			"type": "float",
+			"display_name": "Network bytes in PS",
+			"name": "stat_rxkB"
+		},
+		{
+			"array": false,
+			"description": "Network Out Per Second",
+			"tags": [ "system" ],
+			"type": "float",
+			"display_name": "Network bytes out PS",
+			"name": "stat_txkB"
+		},
+		{
+			"array": false,
+			"description": "Network Rx Error Per Second",
+			"tags": [ "system" ],
+			"type": "float",
+			"display_name": "Network Rx Error PS",
+			"name": "stat_rxerr"
+		},
+		{
+			"array": false,
+			"description": "Network Tx Error Per Second",
+			"tags": [ "system" ],
+			"type": "float",
+			"display_name": "Network Tx Error PS",
+			"name": "stat_txerr"
+		},
+		{
+			"array": false,
+			"description": "Percent Disk used",
+			"tags": [ "system" ],
+			"type": "float",
+			"display_name": "Percent Disk used",
+			"name": "stat_diskfreepct"
+		},
+		{
+			"array": false,
+			"description": "Host Name",
+			"tags": [ "system" ],
+			"type": "string",
+			"display_name": "Host Name",
+			"name": "stat_hostname"
+		},
+		{
+			"array": false,
+			"description": "Network Interface",
+			"tags": [ "system" ],
+			"type": "string",
+			"display_name": "Network Interface",
+			"name": "stat_iface"
+		},
+		{
+			"array": true,
+			"description": "Network Usage",
+			"tags": [ "system" ],
+			"type": "object",
+			"display_name": "Network Usage",
+			"name": "stat_net_usage"
+		},
+		{
+			"array": true,
+			"description": "Network Errors",
+			"tags": [ "system" ],
+			"type": "object",
+			"display_name": "Network Errors",
+			"name": "stat_net_errors"
+		},
+		{
+			"array": true,
+			"description": "Node Roles",
+			"tags": [ "system" ],
+			"type": "string",
+			"display_name": "Node Roles",
+			"name": "stat_node_roles"
+		}
+
+    ]}
+}
