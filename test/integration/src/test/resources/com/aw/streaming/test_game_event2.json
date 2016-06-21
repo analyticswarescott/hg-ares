@@ -1,0 +1,198 @@
+
+[
+		{
+			"alarmActive": 1,
+			"alarmCode": 12,
+			"anomalyDetected": false,
+			"baccaratCardValue": null,
+			"baccaratTotal": null,
+			"better": null,
+			"cardSeq": null,
+			"cardSpot": null,
+			"cardTotal": 3,
+			"chips": null,
+			"commissionCalc": 15,
+			"commissionCollected": 15,
+			"commissionSchedule": 2,
+			"commissionTotalAction": 1200,
+			"dealerId": "0000000000000000E02B003000034A60",
+			"dragon7": false,
+			"errorDetected": false,
+			"eventId": "999b795b-ae96-41af-83c2-d68f9a9da0f4",
+			"eventTimestamp": 1464914438986,
+			"eventType": "GameEvent",
+			"freeHand": false,
+			"gameEventType": "EndRound",
+			"gameType": "Baccarat",
+			"globalAlarm": null,
+			"hand": null,
+			"natural": false,
+			"panda8": false,
+			"payout": {
+				"spotResults": [
+					{
+						"better": {
+							"betPosition": 3,
+							"depth": 0,
+							"playerId": "3"
+						},
+						"lastActionEventTimestamp": 1464914435350,
+						"lossCollected": false,
+						"overpayout": false,
+						"payoutChips": [
+							{
+								"chipId": "000030000000000000004801B5A34D00",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A22828",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A3480C",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A34813",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A34831",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A16034",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A3782D",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A3BC12",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A2FC27",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A330F7",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A480F2",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A1DCA6",
+								"chipType": "Normal",
+								"chipValue": 100
+							}
+						],
+						"payoutCollected": true,
+						"payoutValue": 1200,
+						"position": 3,
+						"spot": 28,
+						"spotOutcome": "Win",
+						"spotValue": 1200,
+						"underpayout": false,
+						"wagerChips": [
+							{
+								"chipId": "000030000000000000004801B5A3182B",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A25903",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A43059",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A3702C",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A2D40C",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A2FD03",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A340F8",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A1DC6A",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A060F5",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A090FE",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A0E8FB",
+								"chipType": "Normal",
+								"chipValue": 100
+							},
+							{
+								"chipId": "000030000000000000004801B5A4FCFE",
+								"chipType": "Normal",
+								"chipValue": 100
+							}
+						],
+						"winPaidFull": true,
+						"winPaidValue": 1200
+					}
+				],
+				"totalAction": 1200,
+				"totalCollected": 0,
+				"totalPayout": 1200,
+				"totalPush": 0
+			},
+			"position": null,
+			"rank": null,
+			"roundAborted": false,
+			"roundEnd": 1464914441000,
+			"roundId": "45b02076-beca-4902-ab56-c348e9f5252f",
+			"roundStart": 1464914398000,
+			"roundStateCode": "Summary",
+			"site_id": "20",
+			"site_ts": 1464914442101,
+			"spot": null,
+			"spotChipValue": null,
+			"suit": null,
+			"tableId": "014",
+			"tournamentMode": false,
+			"winner": "Banker"
+		}
+	]
