@@ -9,12 +9,12 @@
 		"settings": {
 
 			"config_db_master": {
-				"master_db_port" : 5432,
+				"master_db_port" : 3306,
 				"target_replication" : 1,
 				"conf_dir" : "/var/lib/pgsql/9.5/data"
 			},
 			"config_db_worker": {
-				"worker_db_port": 5432
+				"worker_db_port": 3306
 			},
 
 			"zookeeper": {

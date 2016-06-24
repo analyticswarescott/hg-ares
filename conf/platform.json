@@ -2,17 +2,17 @@
     "tags": [],
     "scope": "all",
     "name": "local",
-    "id": "e2b14c58-3071-4b4c-b913-783919bb0e3d",
+    "id": "ca0b3515-19a0-46e6-b71b-4e8d812fcd25",
     "tenant_id": "0",
+    "description": "local platform",
     "body_class": "com.aw.platform.DefaultPlatform",
     "type": "platform",
     "author": "aw",
     "version": 3,
-    "description": "local platform",
     "grouping": "",
     "display_name": "local platform",
     "version_author": "aw",
-    "version_date": 1466552214960,
+    "version_date": 1466758515000,
     "is_current": true,
     "perm_read": "all",
     "perm_write": "all",
@@ -36,10 +36,10 @@
         }},
         "settings": {
             "config_db_master": {
-                "master_db_port": 5432,
+                "master_db_port": 3306,
                 "target_replication": 1
             },
-            "config_db_worker": {"worker_db_port": 5432},
+            "config_db_worker": {"worker_db_port": 3306},
             "elasticsearch": {
                 "port": 9200,
                 "es_transport_port": 9300,

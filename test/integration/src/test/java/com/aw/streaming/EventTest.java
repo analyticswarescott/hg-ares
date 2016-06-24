@@ -45,6 +45,8 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 	@Override
 	public void setExtraSysProps() {
 		try {
+			Exception e = new Exception();
+			e.printStackTrace();
 			set();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -56,13 +58,18 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		//TODO: automate custom testing paths that base test classes can find -- maybe a ETE_TEST_MDOE setting to drive
 		System.setProperty("stream_lib_override", "/Users/scott/dev/src/hg-ares/conf/stream");
 
+		System.setProperty("DB_VENDOR", "mysql");
+
+		System.setProperty("ARES_BASE_HOME", "/Users/scott/dev/src/ares/cluster");
+		System.out.println("ENV BASE HOME: " + EnvironmentSettings.getAresBaseHome());
+
 		System.setProperty("ARES_HOME", "/Users/scott/dev/src/hg-ares");
 
 		System.out.println("SYSPROP:" + System.getProperty("ARES_HOME"));
-		System.out.println("ENV: "  + EnvironmentSettings.getDgHome());
+		System.out.println("ENV: "  + EnvironmentSettings.getAppLayerHome());
 
 		System.setProperty("ARES_SPARK_HOME", "/Users/scott/dev/src/hg-ares/test/integration/spark_test");
-		System.setProperty("SPARK_LIB_HOME", "/Users/scott/dev/src/ares/cluster/ares-core/compute/target/lib");
+		//System.setProperty("SPARK_LIB_HOME", "/Users/scott/dev/src/ares/cluster/ares-core/compute/target/lib");
 	}
 
 	@Test
@@ -220,8 +227,7 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 
 
 
-	//	System.out.println(" pause 4 minutes to check system state...comment once test is working");
-	//	Thread.sleep(240000);
+
 
 		//make sure we get the counts we expect
 		DataFeedUtils.awaitESResult(ESKnownIndices.EVENTS_ES, Tenant.forId("1") , "GameEvent", 2, 180);
@@ -229,9 +235,12 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		//count JDBC rows for now -- TODO: assert contents of at least 1 row to check transformations
 
 		//can be timing if ES is too fast
-		Thread.sleep(500);
+		Thread.sleep(1000);
 		assertEquals(" expect 2 game event rows ", 2,
 			TestDependencies.getDBMgr().get().executeScalarCountSelect(Tenant.forId("1"),"select count(*) as cnt from gameevent"));
+
+	/*	System.out.println("========== TEST PASSED!! pause 10 minutes to check system state...comment once test is working");
+		Thread.sleep(600000);*/
 
 	}
 
@@ -250,7 +259,7 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		TaskStatus taskStatus = status.get(taskDef);
 		assertEquals(PlatformStatusPoller.TYPE, taskStatus.getTaskDef().getTaskTypeName());
 
-		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("0"), "topic_status", DataFeedUtils.AT_LEAST_1, 180);
+		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("0"), "topic_status", DataFeedUtils.AT_LEAST_1, 300);
 		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("0"), "perf_stat", DataFeedUtils.AT_LEAST_1, 30);
 
 		/*//verify zookeeper for tenant 1 TODO: assert full tree once task GUIDs can be resolved
