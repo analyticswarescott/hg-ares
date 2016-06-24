@@ -7,6 +7,7 @@
     "enabled": "true",
     "supervise" : "true",
     "driver_class": "com.aw.compute.streams.drivers.KafkaDriver",
+    "custom_jar" : "hg-apps-1.0.0-SNAPSHOT.jar",
     "batch_inteval_seconds": "5",
     "heartbeat_interval" : "3",
     "work_poll_interval" : "15",

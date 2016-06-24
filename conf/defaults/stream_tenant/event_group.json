@@ -11,7 +11,7 @@
 		"optimal_events_per_task" : 10000,
 		"source_topic": ["event_group"],
 		"config_data": {
-			"processor_class": "com.aw.compute.streams.processor.HDFSEventProcessor",
+			"processor_class": "com.hg.custom.stream.processor.HDFSEventProcessor",
 			"json_transformer_factory": "com.hg.custom.stream.transformer.JsonTransformerFactoryHG"
 		}
 	}

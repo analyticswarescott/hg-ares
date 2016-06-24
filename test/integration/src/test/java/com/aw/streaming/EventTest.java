@@ -45,8 +45,6 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 	@Override
 	public void setExtraSysProps() {
 		try {
-			Exception e = new Exception();
-			e.printStackTrace();
 			set();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -56,9 +54,6 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 	public void set() throws Exception{
 
 		//TODO: automate custom testing paths that base test classes can find -- maybe a ETE_TEST_MDOE setting to drive
-		System.setProperty("stream_lib_override", "/Users/scott/dev/src/hg-ares/conf/stream");
-
-		System.setProperty("DB_VENDOR", "mysql");
 
 		System.setProperty("ARES_BASE_HOME", "/Users/scott/dev/src/ares/cluster");
 		System.out.println("ENV BASE HOME: " + EnvironmentSettings.getAresBaseHome());
@@ -66,10 +61,14 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		System.setProperty("ARES_HOME", "/Users/scott/dev/src/hg-ares");
 
 		System.out.println("SYSPROP:" + System.getProperty("ARES_HOME"));
-		System.out.println("ENV: "  + EnvironmentSettings.getAppLayerHome());
+		System.out.println("ENV: " + EnvironmentSettings.getAppLayerHome());
 
 		System.setProperty("ARES_SPARK_HOME", "/Users/scott/dev/src/hg-ares/test/integration/spark_test");
-		//System.setProperty("SPARK_LIB_HOME", "/Users/scott/dev/src/ares/cluster/ares-core/compute/target/lib");
+
+
+
+
+
 	}
 
 	@Test
@@ -207,37 +206,35 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 
 		//fire array of events via REST
 		RestClient client = new RestClient(NodeRole.REST, TestDependencies.getPlatform().get());
-		HttpResponse resp = client.execute(HttpMethod.PUT, "/rest/1.0/ares/event/1/event", DataFeedUtils.getInputStream("test_game_event.json"));
+		HttpResponse resp = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event.json"));
 
-		System.out.println(" event rest call 1 status: " + resp.getStatusLine().getStatusCode());
+
+		System.out.println(" event rest call 1 status: " + resp.getStatusLine().getReasonPhrase());
 		System.out.println(EntityUtils.toString(resp.getEntity()));
 
 		//test UPSERT-tolerance
-		HttpResponse resp2 = client.execute(HttpMethod.PUT, "/rest/1.0/ares/event/1/event", DataFeedUtils.getInputStream("test_game_event.json"));
+		HttpResponse resp2 = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event.json"));
 
-		System.out.println(" event rest call 2 status: " + resp2.getStatusLine().getStatusCode());
+		System.out.println(" event rest call 2 status: " + resp2.getStatusLine().getReasonPhrase());
 		System.out.println(EntityUtils.toString(resp2.getEntity()));
 
 
 		//send event 2 with a different ID
-		HttpResponse resp3 = client.execute(HttpMethod.PUT, "/rest/1.0/ares/event/1/event", DataFeedUtils.getInputStream("test_game_event2.json"));
+		HttpResponse resp3 = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event2.json"));
 
-		System.out.println(" event rest call 3 status: " + resp3.getStatusLine().getStatusCode());
+		System.out.println(" event rest call 3 status: " + resp3.getStatusLine().getReasonPhrase());
 		System.out.println(EntityUtils.toString(resp3.getEntity()));
 
 
-
-
-
 		//make sure we get the counts we expect
-		DataFeedUtils.awaitESResult(ESKnownIndices.EVENTS_ES, Tenant.forId("1") , "GameEvent", 2, 180);
+		DataFeedUtils.awaitESResult(ESKnownIndices.EVENTS_ES, Tenant.forId("1"), "GameEvent", 2, 180);
 
 		//count JDBC rows for now -- TODO: assert contents of at least 1 row to check transformations
 
 		//can be timing if ES is too fast
 		Thread.sleep(1000);
 		assertEquals(" expect 2 game event rows ", 2,
-			TestDependencies.getDBMgr().get().executeScalarCountSelect(Tenant.forId("1"),"select count(*) as cnt from gameevent"));
+				TestDependencies.getDBMgr().get().executeScalarCountSelect(Tenant.forId("1"), "select count(*) as cnt from gameevent"));
 
 	/*	System.out.println("========== TEST PASSED!! pause 10 minutes to check system state...comment once test is working");
 		Thread.sleep(600000);*/
