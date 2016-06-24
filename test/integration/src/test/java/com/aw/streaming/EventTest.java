@@ -55,15 +55,12 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 
 		//TODO: automate custom testing paths that base test classes can find -- maybe a ETE_TEST_MDOE setting to drive
 
-		System.setProperty("ARES_BASE_HOME", "/Users/scott/dev/src/ares/cluster");
-		System.out.println("ENV BASE HOME: " + EnvironmentSettings.getAresBaseHome());
+		//TODO: Jetty only reads sysprops -- need to refine
+		System.setProperty("ARES_BASE_HOME", EnvironmentSettings.getAresBaseHome());
+		System.setProperty("ARES_HOME", EnvironmentSettings.getAppLayerHome());
 
-		System.setProperty("ARES_HOME", "/Users/scott/dev/src/hg-ares");
 
-		System.out.println("SYSPROP:" + System.getProperty("ARES_HOME"));
-		System.out.println("ENV: " + EnvironmentSettings.getAppLayerHome());
-
-		System.setProperty("ARES_SPARK_HOME", "/Users/scott/dev/src/hg-ares/test/integration/spark_test");
+		//System.setProperty("ARES_SPARK_HOME", "/Users/scott/dev/src/hg-ares/test/integration/spark_test");
 
 
 

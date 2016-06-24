@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+		 id="WebApp_ID" version="3.0">
+	<display-name>ares-apps</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+	<filter>
+		<filter-name>AuthenticationFilter</filter-name>
+		<filter-class>com.aw.unity.odata.AuthenticationFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/odata/odata.svc/*</url-pattern>
+	</filter-mapping>
+
+
+	<servlet>
+		<servlet-name>ODataServlet</servlet-name>
+		<servlet-class>org.apache.olingo.odata2.core.servlet.ODataServlet</servlet-class>
+
+		<init-param>
+			<param-name>org.apache.olingo.odata2.service.factory</param-name>
+			<param-value>com.aw.unity.odata.ServiceFactory</param-value>
+		</init-param>
+
+
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ODataServlet</servlet-name>
+		<url-pattern>/odata/odata.svc/*</url-pattern>
+	</servlet-mapping>
+
+	<!--  REST Interface via Jersey -->
+	<servlet>
+		<servlet-name>Jersey REST Service Ares</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+
+        <init-param>
+          <param-name>javax.ws.rs.Application</param-name>
+          <param-value>com.aw.rest.AWRestPackageConfig</param-value>
+		<!--	<param-value>com.hg.custom.rest.HGRestPkgConfig</param-value>-->
+        </init-param>
+
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Jersey REST Service Ares</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+
+<!--	<servlet>
+		<servlet-name>Jersey REST Service HG</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>com.hg.custom.rest.HGRestPackageConfig</param-value>
+		</init-param>
+
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Jersey REST Service HG</servlet-name>
+		<url-pattern>/resthg/*</url-pattern>
+	</servlet-mapping>-->
+
+
+
+</web-app>
