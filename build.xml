@@ -1,0 +1,215 @@
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant" name="platform" default="default" basedir=".">
+
+    <property environment="env"/>
+    <property file="build.properties"/>
+    <property name="platform.lib" value="lib"/>
+
+    <path id="maven-ant-tasks.classpath" path="${platform.lib}/maven-ant-tasks-2.1.3.jar"/>
+
+    <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+             uri="antlib:org.apache.maven.artifact.ant"
+             classpathref="maven-ant-tasks.classpath"/>
+
+
+
+    <property name="platform.target.dir" value="${basedir}/target"/>
+	<property name="platform.tools.dir" value="${basedir}/tools/target"/>
+
+    <property name="platform.dev.dir" value="${basedir}/dev"/>
+    <property name="platform.archive.dir" value="${basedir}/archive"/>
+    <property name="platform.target.stream.lib.dir" value="${platform.target.dir}/lib/stream"/>
+    <property name="platform.target.reporting.lib.dir" value="${platform.target.dir}/lib/rest"/>
+    <property name="platform.target.reporting.webcontent.dir" value="${platform.target.dir}/roles/rest/WebContent"/>
+
+    <property name="platform.target.rest.dir" value="${platform.target.dir}/roles"/>
+    <property name="platform.target.conf.dir" value="${platform.target.dir}/conf"/>
+    <property name="platform.target.log.dir" value="${platform.target.dir}/log"/>
+    <property name="control.files.dir" value="${basedir}/deploy/overlay" />
+    <property name="dev.tools.control.files.dir" value="${basedir}/deploy/dev/overlay" />
+    <property name="ares-apps.conf.dir" value="${basedir}/conf"/>
+    <property name="ares-apps.webcontent.dir" value="${basedir}/ares-apps/WebContent"/>
+
+
+    <target name="init">
+        <mkdir dir="${platform.target.dir}"/>
+        <mkdir dir="${platform.dev.dir}"/>
+        <mkdir dir="${platform.target.rest.dir}"/>
+        <mkdir dir="${platform.archive.dir}"/>
+
+        <mkdir dir="${control.files.dir}/log"/>
+        <mkdir dir="${control.files.dir}/log/rest"/>
+        <mkdir dir="${control.files.dir}/log/node"/>
+        <mkdir dir="${control.files.dir}/data"/>
+    </target>
+
+
+    <target name="clean">
+        <delete dir="${platform.target.dir}"/>
+        <delete dir="${platform.archive.dir}"/>
+        <antcall target="clean-dev" />
+    </target>
+
+    <target name="clean-dev">
+        <delete dir="${platform.dev.dir}"/>
+    </target>
+
+
+	<target name="package-patch" depends="clean,init">
+		<antcall target="clean" />
+		<antcall target="init" />
+		<antcall target="build-patch" />
+		<antcall target="archive-patch" />
+	</target>
+
+    <target name="package" depends="clean,init">
+        <antcall target="build-components" />
+        <antcall target="build-control-files" />
+        <antcall target="archive" />
+    </target>
+
+
+    <target name="package-dev" depends="clean-dev,init">
+        <antcall target="build-dev-control-files" />
+        <antcall target="archive-dev" />
+    </target>
+
+    <target name="archive">
+        <tar destfile="${platform.archive.dir}/platform.tar" basedir="${platform.target.dir}"/>
+        <gzip destfile="${platform.archive.dir}/platform.tar.gz" src="${platform.archive.dir}/platform.tar"/>
+        <delete file="${platform.archive.dir}/platform.tar"/>
+    </target>
+
+	<target name="archive-patch">
+		<tar destfile="${platform.archive.dir}/overlay.tar" basedir="${platform.target.dir}"/>
+		<tar destfile="${platform.archive.dir}/conf.tar" basedir="${ares-apps.conf.dir}"/>
+		<tar destfile="${platform.archive.dir}/patch.tar">
+			<fileset dir="${platform.archive.dir}"/>
+		</tar>
+		<gzip destfile="${platform.archive.dir}/patch.tar.gz" src="${platform.archive.dir}/patch.tar"/>
+		<delete file="${platform.archive.dir}/conf.tar"/>
+		<delete file="${platform.archive.dir}/overlay.tar"/>
+		<delete file="${platform.archive.dir}/patch.tar"/>
+		<delete file="${platform.archive.dir}/build.number"/>
+	</target>
+
+    <target name="archive-dev">
+        <tar destfile="${platform.archive.dir}/dev.tar" basedir="${platform.dev.dir}"/>
+        <gzip destfile="${platform.archive.dir}/dev.tar.gz" src="${platform.archive.dir}/dev.tar"/>
+        <delete file="${platform.archive.dir}/dev.tar"/>
+    </target>
+
+    <target name="build-control-files">
+        <copy todir="${platform.target.dir}" overwrite="true">
+            <fileset dir="${control.files.dir}"/>
+        </copy>
+        <copy todir="${platform.target.conf.dir}">
+            <fileset dir="${ares-apps.conf.dir}"/>
+        </copy>
+        <delete dir="${platform.target.conf.dir}/custom"/>
+        <delete dir="${platform.target.conf.dir}/derby"/>
+        <delete dir="${platform.target.conf.dir}/temp_hdfs"/>
+    </target>
+
+
+    <target name="build-dev-control-files">
+        <copy todir="${platform.dev.dir}" overwrite="true">
+            <fileset dir="${dev.tools.control.files.dir}"/>
+        </copy>
+		<copy todir="${platform.dev.dir}/lib/tools" overwrite="true">
+			<fileset dir="${platform.tools.dir}">
+				<include name="ares-apps-tools-8.0.0-SNAPSHOT.jar"/>
+			</fileset>
+		</copy>
+
+
+    </target>
+
+
+
+    <target name="deploy-dev">
+        <antcall target="jsch">
+            <param name="cmd" value="scp"/>
+            <param name="target" value="send-dev-do"/>
+        </antcall>
+        <antcall target="explode-dev" />
+    </target>
+    <target name="send-dev-do">
+        <scp file="${platform.archive.dir}/dev.tar.gz" todir="${deploy.username}:${deploy.password}@${deploy.host}:${deploy.archive.dir}"/>
+    </target>
+
+
+    <target name="build-components">
+
+        <copy todir="${platform.target.reporting.lib.dir}">
+            <fileset dir="ares-apps/target/lib"/>
+        </copy>
+
+        <copy todir="${platform.target.stream.lib.dir}">
+            <fileset dir="ares-core/compute/target/lib"/>
+        </copy>
+
+        <copy todir="${platform.target.reporting.lib.dir}">
+            <fileset dir="ares-apps/target">
+                <include name="*.jar"/>
+                <exclude name="*sources*.jar"/>
+            </fileset>
+            <fileset dir="ares-node/target">
+                <include name="*.jar"/>
+                <exclude name="*sources*.jar"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${platform.target.stream.lib.dir}">
+            <fileset dir="ares-core/compute/target">
+                <include name="*.jar"/>
+                <exclude name="*sources*.jar"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${platform.target.conf.dir}/stream" file="ares-core/compute/target/stream.classpath"/>
+
+        <copy todir="${platform.target.reporting.webcontent.dir}">
+            <fileset dir="${ares-apps.webcontent.dir}"/>
+        </copy>
+        <copy todir="${platform.target.nodeservice.webcontent.dir}">
+            <fileset dir="${nodeservice.webcontent.dir}"/>
+        </copy>
+
+    </target>
+
+	<target name="build-patch">
+
+
+		<copy todir="${platform.target.stream.lib.dir}" flatten="true">
+			<fileset dir="." >
+				<include name="*/**/target/ares*.jar"/>
+				<exclude name="*/**/target/ares*sources*.jar"/>
+				<exclude name="*/**/target/ares-apps-tools*.jar"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${platform.target.reporting.lib.dir}" flatten="true">
+			<fileset dir=".">
+				<include name="*/**/target/ares*.jar"/>
+				<exclude name="*/**/target/ares*sources*.jar"/>
+				<exclude name="*/**/target/ares-apps-tools*.jar"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${platform.target.conf.dir}/stream" file="ares-core/compute/target/stream.classpath"/>
+
+		<copy todir="${platform.target.reporting.webcontent.dir}">
+			<fileset dir="${ares-apps.webcontent.dir}"/>
+		</copy>
+		<copy todir="${platform.target.nodeservice.webcontent.dir}">
+			<fileset dir="${nodeservice.webcontent.dir}"/>
+		</copy>
+
+	</target>
+
+
+
+
+
+
+</project>
