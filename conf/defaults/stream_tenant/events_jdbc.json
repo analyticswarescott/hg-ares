@@ -12,7 +12,12 @@
 		"source_topic": ["events_jdbc"],
 		"config_data": {
 			"processor_class": "com.aw.compute.streams.processor.GenericJDBCProcessor",
-			"table_name": "gameevents"
+			"table_name": "gameevents",
+		    "db_host" : "corpdb.cho2ai5h4pd6.us-west-2.rds.amazonaws.com",
+		    "db_port" : "3306",
+		    "db_user" : "eric",
+		    "db_pass" : "cire",
+		    "db_schema" : "testbi"
 		}
 	}
 }

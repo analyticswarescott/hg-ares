@@ -26,8 +26,8 @@
     <property name="platform.target.log.dir" value="${platform.target.dir}/log"/>
     <property name="control.files.dir" value="${basedir}/deploy/overlay" />
     <property name="dev.tools.control.files.dir" value="${basedir}/deploy/dev/overlay" />
-    <property name="ares-apps.conf.dir" value="${basedir}/conf"/>
-    <property name="ares-apps.webcontent.dir" value="${basedir}/ares-apps/WebContent"/>
+    <property name="hg-apps.conf.dir" value="${basedir}/conf"/>
+    <property name="hg-apps.webcontent.dir" value="${basedir}/hg-apps/WebContent"/>
 
 
     <target name="init">
@@ -74,14 +74,14 @@
     </target>
 
     <target name="archive">
-        <tar destfile="${platform.archive.dir}/platform.tar" basedir="${platform.target.dir}"/>
-        <gzip destfile="${platform.archive.dir}/platform.tar.gz" src="${platform.archive.dir}/platform.tar"/>
-        <delete file="${platform.archive.dir}/platform.tar"/>
+        <tar destfile="${platform.archive.dir}/hg-apps.tar" basedir="${platform.target.dir}"/>
+        <gzip destfile="${platform.archive.dir}/hg-apps.tar.gz" src="${platform.archive.dir}/hg-apps.tar"/>
+        <delete file="${platform.archive.dir}/hg-apps.tar"/>
     </target>
 
 	<target name="archive-patch">
 		<tar destfile="${platform.archive.dir}/overlay.tar" basedir="${platform.target.dir}"/>
-		<tar destfile="${platform.archive.dir}/conf.tar" basedir="${ares-apps.conf.dir}"/>
+		<tar destfile="${platform.archive.dir}/conf.tar" basedir="${hg-apps.conf.dir}"/>
 		<tar destfile="${platform.archive.dir}/patch.tar">
 			<fileset dir="${platform.archive.dir}"/>
 		</tar>
@@ -103,7 +103,7 @@
             <fileset dir="${control.files.dir}"/>
         </copy>
         <copy todir="${platform.target.conf.dir}">
-            <fileset dir="${ares-apps.conf.dir}"/>
+            <fileset dir="${hg-apps.conf.dir}"/>
         </copy>
         <delete dir="${platform.target.conf.dir}/custom"/>
         <delete dir="${platform.target.conf.dir}/derby"/>
@@ -117,7 +117,7 @@
         </copy>
 		<copy todir="${platform.dev.dir}/lib/tools" overwrite="true">
 			<fileset dir="${platform.tools.dir}">
-				<include name="ares-apps-tools-8.0.0-SNAPSHOT.jar"/>
+				<include name="hg-apps-tools-8.0.0-SNAPSHOT.jar"/>
 			</fileset>
 		</copy>
 
@@ -125,54 +125,25 @@
     </target>
 
 
-
-    <target name="deploy-dev">
-        <antcall target="jsch">
-            <param name="cmd" value="scp"/>
-            <param name="target" value="send-dev-do"/>
-        </antcall>
-        <antcall target="explode-dev" />
-    </target>
-    <target name="send-dev-do">
-        <scp file="${platform.archive.dir}/dev.tar.gz" todir="${deploy.username}:${deploy.password}@${deploy.host}:${deploy.archive.dir}"/>
-    </target>
-
-
     <target name="build-components">
 
         <copy todir="${platform.target.reporting.lib.dir}">
-            <fileset dir="ares-apps/target/lib"/>
-        </copy>
-
-        <copy todir="${platform.target.stream.lib.dir}">
-            <fileset dir="ares-core/compute/target/lib"/>
-        </copy>
-
-        <copy todir="${platform.target.reporting.lib.dir}">
-            <fileset dir="ares-apps/target">
-                <include name="*.jar"/>
-                <exclude name="*sources*.jar"/>
-            </fileset>
-            <fileset dir="ares-node/target">
+            <fileset dir="hg-apps/target">
                 <include name="*.jar"/>
                 <exclude name="*sources*.jar"/>
             </fileset>
         </copy>
 
         <copy todir="${platform.target.stream.lib.dir}">
-            <fileset dir="ares-core/compute/target">
+            <fileset dir="hg-apps/target">
                 <include name="*.jar"/>
                 <exclude name="*sources*.jar"/>
             </fileset>
         </copy>
 
-        <copy todir="${platform.target.conf.dir}/stream" file="ares-core/compute/target/stream.classpath"/>
 
         <copy todir="${platform.target.reporting.webcontent.dir}">
-            <fileset dir="${ares-apps.webcontent.dir}"/>
-        </copy>
-        <copy todir="${platform.target.nodeservice.webcontent.dir}">
-            <fileset dir="${nodeservice.webcontent.dir}"/>
+            <fileset dir="${hg-apps.webcontent.dir}"/>
         </copy>
 
     </target>
@@ -180,29 +151,9 @@
 	<target name="build-patch">
 
 
-		<copy todir="${platform.target.stream.lib.dir}" flatten="true">
-			<fileset dir="." >
-				<include name="*/**/target/ares*.jar"/>
-				<exclude name="*/**/target/ares*sources*.jar"/>
-				<exclude name="*/**/target/ares-apps-tools*.jar"/>
-			</fileset>
-		</copy>
-
-		<copy todir="${platform.target.reporting.lib.dir}" flatten="true">
-			<fileset dir=".">
-				<include name="*/**/target/ares*.jar"/>
-				<exclude name="*/**/target/ares*sources*.jar"/>
-				<exclude name="*/**/target/ares-apps-tools*.jar"/>
-			</fileset>
-		</copy>
-
-		<copy todir="${platform.target.conf.dir}/stream" file="ares-core/compute/target/stream.classpath"/>
 
 		<copy todir="${platform.target.reporting.webcontent.dir}">
-			<fileset dir="${ares-apps.webcontent.dir}"/>
-		</copy>
-		<copy todir="${platform.target.nodeservice.webcontent.dir}">
-			<fileset dir="${nodeservice.webcontent.dir}"/>
+			<fileset dir="${hg-apps.webcontent.dir}"/>
 		</copy>
 
 	</target>
