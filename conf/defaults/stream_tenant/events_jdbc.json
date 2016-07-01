@@ -15,9 +15,10 @@
 			"table_name": "gameevents",
 		    "db_host" : "corpdb.cho2ai5h4pd6.us-west-2.rds.amazonaws.com",
 		    "db_port" : "3306",
-		    "db_user" : "eric",
-		    "db_pass" : "cire",
-		    "db_schema" : "testbi"
+		    "db_user" : "fortissadmin",
+		    "db_pass" : "joker4DB!",
+		    "db_schema" : "testbi",
+		  "db_provider" : "com.aw.document.jdbc.mysql.MySQLJDBCProvider"
 		}
 	}
 }

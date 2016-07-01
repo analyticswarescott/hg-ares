@@ -1,7 +1,7 @@
 
 SET sql_mode = 'ALLOW_INVALID_DATES';
 
-CREATE TABLE GAMEEVENT (
+CREATE TABLE GameEvent (
 	eventid varchar(200),
 	alarmActive int,
 	alarmCode int,
