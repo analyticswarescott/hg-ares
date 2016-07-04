@@ -25,15 +25,15 @@
 
     <property>
         <name>dfs.name.dir</name>
-        <value>/opt/dg/data/hadoop/name</value>
+        <value>/opt/aw/data/hadoop/name</value>
     </property>
     <property>
         <name>dfs.data.dir</name>
-        <value>/opt/dg/data/hadoop/data</value>
+        <value>/opt/aw/data/hadoop/data</value>
     </property>
      <property>
         <name>dfs.tmp.dir</name>
-        <value>/opt/dg/data/hadoop/tmp</value>
+        <value>/opt/aw/data/hadoop/tmp</value>
     </property>
 
     <property>
@@ -95,7 +95,7 @@
 
     <property>
         <name>dfs.journalnode.edits.dir</name>
-        <value>/opt/dg/data/hadoop/journal</value>
+        <value>/opt/aw/data/hadoop/journal</value>
     </property>
 
     <property>
@@ -105,11 +105,11 @@
 
     <property>
         <name>dfs.nameservices</name>
-        <value>dg</value>
+        <value>aw</value>
     </property>
 
     <property>
-        <name>dfs.ha.namenodes.dg</name>
+        <name>dfs.ha.namenodes.aw</name>
         <value>localhost</value>
     </property>
 

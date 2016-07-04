@@ -146,6 +146,10 @@
             <fileset dir="${hg-apps.webcontent.dir}"/>
         </copy>
 
+        <copy todir="${platform.target.conf.dir}">
+            <fileset dir="${hg-apps.conf.dir}"/>
+        </copy>
+
     </target>
 
 	<target name="build-patch">
