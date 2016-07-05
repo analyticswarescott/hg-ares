@@ -1,5 +1,5 @@
 {
-	"display_name": "Load Events to ES  ",
+	"display_name": "Load Events to JDBC  ",
 	"description": " desc ",
 	"author": "aw",
 	"body_class": "com.aw.common.spark.StreamDef",
@@ -13,11 +13,11 @@
 		"config_data": {
 			"processor_class": "com.aw.compute.streams.processor.GenericJDBCProcessor",
 			"table_name": "gameevents",
-		    "db_host" : "corpdb.cho2ai5h4pd6.us-west-2.rds.amazonaws.com",
+		    "db_host" : "192.168.38.4",
 		    "db_port" : "3306",
-		    "db_user" : "fortissadmin",
-		    "db_pass" : "joker4DB!",
-		    "db_schema" : "testbi",
+		    "db_user" : "eric",
+		    "db_pass" : "cire",
+		    "db_schema" : "test_bi",
 		  "db_provider" : "com.aw.document.jdbc.mysql.MySQLJDBCProvider"
 		}
 	}

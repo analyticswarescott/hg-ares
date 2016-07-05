@@ -9,7 +9,7 @@ CREATE TABLE GameEvent (
 	someDouble DECIMAL,
 	someBigInt DECIMAL,
 	someTimestamp TIMESTAMP,
-	defaulted_ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	defaulted_ts TIMESTAMP,
 	PRIMARY KEY (eventid)
 
 );

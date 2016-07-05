@@ -29,14 +29,13 @@ public class DBMaintain {
 
 
         Map<String, String> dbc = new HashMap<>();
-        dbc.put(DBConfig.DB_HOST, "corpdb.cho2ai5h4pd6.us-west-2.rds.amazonaws.com");
+        dbc.put(DBConfig.DB_HOST, "192.168.38.4");
         dbc.put(DBConfig.DB_PORT, "3306");
-        dbc.put(DBConfig.DB_USER, "fortissadmin");
-        dbc.put(DBConfig.DB_PASS, "joker4DB!");
-        dbc.put(DBConfig.DB_SCHEMA, "testbi"); //will be appended _[TENANT_ID]
+        dbc.put(DBConfig.DB_USER, "eric");
+        dbc.put(DBConfig.DB_PASS, "cire");
+        dbc.put(DBConfig.DB_SCHEMA, "test_bi"); //will be appended _[TENANT_ID]
 
-        String url = provider.getJDBCURL(dbc, Tenant.forId("1"));
-
+        String url = provider.getJDBCURL(dbc, Tenant.forId("20"));
 
         try (Connection conn = DBMgr.getConnection(url, dbc.get(DBConfig.DB_USER), dbc.get(DBConfig.DB_PASS))) {
 
