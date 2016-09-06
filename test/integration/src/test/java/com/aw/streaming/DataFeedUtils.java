@@ -121,7 +121,7 @@ public class DataFeedUtils {
         long maxWait = timeoutSecs * 1000L; //after this much time we fail
         long last = 0L;
         while (true) {
-            UnityESClient client = new UnityESClient(TestDependencies.getPlatform().get());
+            UnityESClient client = new UnityESClient(TestDependencies.getPlatformMgr().get());
             long esCount = client.docCount(strIndex, type);
 
             if (esCount > 0) {
@@ -162,7 +162,7 @@ public class DataFeedUtils {
         long startTime = System.currentTimeMillis();
         long maxWait = timeoutSecs * 1000L; //after this much time we fail
         while (true) {
-            UnityESClient client = new UnityESClient(TestDependencies.getPlatform().get());
+            UnityESClient client = new UnityESClient(TestDependencies.getPlatformMgr().get());
             long esCount = client.docCount(index, type);
 
             if (esCount > 0) {

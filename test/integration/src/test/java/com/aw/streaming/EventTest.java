@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.aw.common.system.EnvironmentSettings;
+import com.aw.common.util.RestResponse;
 import com.sun.tools.doclint.Env;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -129,7 +130,7 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 	public void testStatus(Tenant tenant, Topic topic, long offset) throws Exception {
 
 		setThreadSystemAccess();
-		RestClient client = new RestClient(NodeRole.REST, TestDependencies.getPlatform().get());
+		RestClient client = new RestClient(NodeRole.REST, TestDependencies.getPlatformMgr().get());
 
 		DefaultPlatformStatus status = client.executeReturnObject(HttpMethod.GET,
 			VERSIONED_REST_PREFIX + "/platform/status/" + DateTime.now().getMillis(), DefaultPlatformStatus.class, false);
@@ -202,35 +203,31 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		provisionTenant("1");
 
 		//fire array of events via REST
-		RestClient client = new RestClient(NodeRole.REST, TestDependencies.getPlatform().get());
-		HttpResponse resp = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event.json"));
+		RestClient client = new RestClient(NodeRole.REST, TestDependencies.getPlatformMgr().get());
+		RestResponse resp = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event.json"));
 
 
-		System.out.println(" event rest call 1 status: " + resp.getStatusLine().getReasonPhrase());
-		System.out.println(EntityUtils.toString(resp.getEntity()));
+		System.out.println(" event rest call 1 status: " + resp.getStatusCode());
+		System.out.println(resp.payloadToString());
 
 		//test UPSERT-tolerance
-		HttpResponse resp2 = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event.json"));
+		RestResponse resp2 = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event.json"));
 
-		System.out.println(" event rest call 2 status: " + resp2.getStatusLine().getReasonPhrase());
-		System.out.println(EntityUtils.toString(resp2.getEntity()));
-
+		System.out.println(" event rest call 2 status: " + resp2.payloadToString());
 
 		//send event 2 with a different ID
-		HttpResponse resp3 = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event2.json"));
+		RestResponse resp3 = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event2.json"));
 
-		System.out.println(" event rest call 3 status: " + resp3.getStatusLine().getReasonPhrase());
-		System.out.println(EntityUtils.toString(resp3.getEntity()));
-
+		System.out.println(" event rest call 3 status: " + resp3.payloadToString());
 
 		//make sure we get the counts we expect
-		DataFeedUtils.awaitESResult(ESKnownIndices.EVENTS_ES, Tenant.forId("1"), "GameEvent", 2, 180);
+		DataFeedUtils.awaitESResult(ESKnownIndices.EVENTS_ES, Tenant.forId("1"), "GameEvent", 2, 300);
 
 		//count JDBC rows for now -- TODO: assert contents of at least 1 row to check transformations
 
 		//can be timing if ES is too fast
 		System.out.println("========== ES passed == pausing to allow completion of JDBC target insert"); //TODO: do scalar count of external DB
-		Thread.sleep(30000);
+		Thread.sleep(3000000);
 	/*	assertEquals(" expect 2 game event rows ", 2,
 				TestDependencies.getDBMgr().get().executeScalarCountSelect(Tenant.forId("1"), "select count(*) as cnt from gameevent"));
 */
@@ -246,7 +243,7 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		Map<TaskDef, TaskStatus> status = TestDependencies.getTaskService().get().getTaskStatus();
 
 		//make sure we have the right number of tasks
-		assertEquals(2, status.size());
+		assertEquals(4, status.size());
 
 		TaskDef taskDef = TestDependencies.getDocs().get().getDocument(DocumentType.TASK_DEF, "platform_status_poller").getBodyAsObject(TaskDef.class);
 

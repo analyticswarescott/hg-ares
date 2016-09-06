@@ -1,0 +1,25 @@
+{
+  "display_name": "Dead Spread Calculatorer",
+  "description": " calculate dead spread continously ",
+  "author": "aw",
+  "scope" : "tenant",
+  "body": {
+	"task_type" : "dead_spread_calculator",
+	"name" : "dead_spread_calculator",
+	"memory_resource_weighting" : 0.01,
+	"cpu_resource_weighting": 0.01,
+	"schedule" : { "type" : "perpetual" },
+	"config" : {
+      "db" : {
+        "db_host" : "192.168.38.4",
+        "db_port" : "3306",
+        "db_user" : "eric",
+        "db_pass" : "cire",
+        "db_schema" : "hgbi",
+        "db_provider" : "com.aw.document.jdbc.mysql.MySQLJDBCProvider"
+      }
+
+    }
+  }
+}
+
