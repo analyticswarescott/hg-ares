@@ -24,6 +24,7 @@ import org.codehaus.jettison.json.JSONObject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -31,6 +32,7 @@ import java.time.temporal.TemporalAmount;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -157,7 +159,7 @@ public class DeadSpreadCalculator extends AbstractTask {
 			return;
 		}
 
-		System.out.println("---------------------------------Calculating dead spread -- ");
+		LOGGER.error("DEBUG: ---------------------------------Calculating dead spread -- ");
 		System.out.println(" =-=-=-=-=-= Last status time was: " + lastStatus);
 
 		//get config
@@ -192,16 +194,24 @@ public class DeadSpreadCalculator extends AbstractTask {
 						, dbConfig.get(DBConfig.DB_PASS));
 
 				//TODO: add site ID based on tenant
-				 ps = conn.prepareStatement(" select count(*) cnt from " + dbConfig.get(DBConfig.DB_SCHEMA) + "."
+				 ps = conn.prepareStatement(" select * from " + dbConfig.get(DBConfig.DB_SCHEMA) + "."
 								 + " fact_dealer_down where audit_insert_ts >= FROM_UNIXTIME(" + milliWatermark + "/1000) "
-						 + " LIMIT 1 " //TODO: DEBUG
+						 + " LIMIT 10 " //TODO: DEBUG
 				 );
 
 				System.out.println(ps.toString());
 				ResultSet rs = ps.executeQuery();
 
-				if (rs.next()) {
-					System.out.println( " dealer down count test = " + rs.getLong("cnt"));
+				while (rs.next()) {
+					String DDID = rs.getString("dealer_down_id");
+					String ddStart = rs.getTimestamp("down_start_ts").toString();
+					String ddEnd = rs.getTimestamp("down_end_ts").toString();
+					String table_id = rs.getString("table_id");
+					String siteID = rs.getString("site_id");
+
+
+					System.out.println("DeadSpreadCalculator:  PROCESSING DDID: " + DDID);
+					processDealerDown(siteID, dbConfig, DDID, table_id, ddStart, ddEnd);
 				}
 
 
@@ -231,15 +241,109 @@ public class DeadSpreadCalculator extends AbstractTask {
 
 
 	//TODO: threading (limit is probably good enough)
-	private void processDealerDown(Connection conn, String ddStart, String ddEnd) {
-
-		//get location
-
-		//get events
+	private void processDealerDown(String siteID, Map<String, String> dbConfig,  String DDID, String locationID,   String ddStart, String ddEnd) throws Exception{
 
 
-		long activeSeconds = 0;
-		long inactiveSeconds = 0;
+		//TODO: loop rounds in the time slive and compute relevant round totals for DD
+
+
+
+
+
+		String sql = "select * " +
+				" from  hgbi.fact_event_timeline " +
+		" where location_id = ? and site_id = ? " +
+		" and event_ts between ? and ?" +
+		" and event_type in (?,?,?,?) " +
+		" order by event_ts";
+
+
+
+		JDBCProvider provider = null;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			if (provider == null) {
+				provider = (JDBCProvider) Class.forName(dbConfig.get(DBConfig.DB_PROVIDER)).newInstance();
+			}
+
+
+			if (conn == null) {
+				//get schema-ed connection to the defined target DB
+				conn = DBMgr.getConnection(provider.getJDBCURL(dbConfig), dbConfig.get(DBConfig.DB_USER)
+						, dbConfig.get(DBConfig.DB_PASS));
+
+				//TODO: add site ID based on tenant
+				ps = conn.prepareStatement(sql);
+
+				int paramIndex =1;
+				ps.setString(paramIndex++, locationID);
+				ps.setString(paramIndex++, siteID);
+				ps.setTimestamp(paramIndex++, Timestamp.valueOf(ddStart));
+				ps.setTimestamp(paramIndex++,Timestamp.valueOf(ddEnd));
+
+				ps.setString(paramIndex++, EventType.DealerLogon.toString());
+				ps.setString(paramIndex++, EventType.DealerLogout.toString());
+				ps.setString(paramIndex++, EventType.EndRound.toString());
+				ps.setString(paramIndex++, EventType.TableIdle.toString());
+
+				System.out.println("EVENT RETRIEVAL QUERY: " + ps.toString());
+				ResultSet rs = ps.executeQuery();
+
+
+				long activeSeconds = 0;
+				long inactiveSeconds = 0;
+
+				int rowIndex = 0;
+				Event prevEvent = null;
+
+				//create audit doc header and array for pair results
+
+
+				while (rs.next()) {
+					String eventID = rs.getString("event_id");
+					String eventType = rs.getString("event_type");
+					Timestamp eventTs = rs.getTimestamp("event_ts");
+
+					Event event = new Event(eventID, EventType.valueOf(eventType), eventTs.toInstant().toEpochMilli());
+
+					if (prevEvent != null) {
+						Pair pair = new Pair(prevEvent, event);;
+
+						//LOGGER.error("DEBUG: PAIR result " + pair.toString());
+
+						switch (pair.getPairType()) {
+							case ACTIVE:
+								activeSeconds+=  pair.duration /1000;
+								break;
+							case IDLE:
+								inactiveSeconds += pair.duration/1000;
+								break;
+							default:
+								throw new Exception(" bad pair type " + pair.getPairType());
+						}
+
+					}
+
+
+
+					prevEvent = event;
+				}
+
+				LOGGER.error("DEBUG: seconds ratio for DD "  + DDID + ": " + inactiveSeconds + "/" + activeSeconds);
+				//update row with DS metrics
+
+			}
+
+		}
+		finally {
+			if (ps != null) {
+				ps.close();
+			}
+			if (conn != null) {
+				conn.close();
+			}
+		}
 
 		//compute
 
@@ -313,6 +417,190 @@ public class DeadSpreadCalculator extends AbstractTask {
 	private Condition interval;
 
 	private TaskDef taskDef;
+
+	public enum EventType {
+		DealerLogon,
+		DealerLogout,
+		EndRound,
+		TableIdle,
+		MainLockboxRemoved,
+		MainLockboxReplaced,
+		JackpotLockboxRemoved,
+		JackpotLockboxReplaced;
+	}
+
+	class Event {
+		public EventType getEventType() {
+			return eventType;
+		}
+
+		public void setEventType(EventType eventType) {
+			this.eventType = eventType;
+		}
+
+		public long getTimestamp() {
+			return timestamp;
+		}
+
+		public void setTimestamp(long timestamp) {
+			this.timestamp = timestamp;
+		}
+
+		private EventType eventType;
+		private long timestamp;
+
+		public String getEventID() {
+			return eventID;
+		}
+
+		public void setEventID(String eventID) {
+			this.eventID = eventID;
+		}
+
+		private String eventID;
+
+		@Override
+		public String toString() {
+			return eventID + " : " + getEventType() + " : " + Instant.ofEpochMilli(timestamp);
+		}
+
+
+		public Event(String eventID, EventType type, long timestamp) {
+			this.eventType = type;
+			this.timestamp = timestamp;
+			this.eventID = eventID;
+
+		}
+
+
+	}
+
+	public enum PairType {
+		ACTIVE,
+		IDLE;
+	}
+
+
+
+	class Pair {
+
+		private Event first;
+		private Event second;
+
+
+		public long getDuration() {return duration;}
+		public void setDuration(long duration) {this.duration = duration;}
+		private long duration;
+
+
+		public PairType getPairType() {
+			return pairType;
+		}
+
+		private PairType pairType;
+
+		@Override
+		public String toString() {
+			StringBuffer ret = new StringBuffer();
+
+			ret.append("\nFirst Event: " + first.toString() + "\n");
+			ret.append("Second Event: " + second.toString() + "\n");
+			ret.append("Pair Type: " + pairType + "\n");
+			ret.append("Duration: " + duration + "\n");
+
+			return ret.toString();
+		}
+
+		public Pair(Event first, Event second) {
+			this.first = first;
+			this.second = second;
+			this.duration = this.second.getTimestamp() - this.first.timestamp;
+			try {
+				evaluate();
+			} catch (Exception e) {
+				throw new RuntimeException(" error evaluating pair ", e);
+			}
+		}
+
+		public void evaluate () throws Exception {
+
+
+			switch (first.getEventType()) {
+				case DealerLogon:
+
+					switch (second.getEventType()) {
+						case EndRound:
+							pairType = PairType.ACTIVE;
+							break;
+
+						case TableIdle:
+							pairType = PairType.IDLE;
+							break;
+
+						case DealerLogout:
+							pairType = PairType.IDLE;
+							break;
+
+						default:
+							throw new Exception(" unexpected second event type " + second.eventType);
+					}
+
+					break;
+
+
+
+				case EndRound:
+
+					switch (second.getEventType()) {
+						case EndRound:
+							pairType = PairType.ACTIVE;
+							break;
+						case TableIdle:
+							pairType = PairType.IDLE;
+							break;
+						case DealerLogout:
+							pairType = PairType.ACTIVE;
+							break;
+						default:
+							throw new Exception(" unexpected second event type " + second.eventType);
+					}
+
+					break;
+
+
+				case TableIdle:
+					switch (second.getEventType()) {
+						case EndRound:
+							pairType = PairType.IDLE;
+							break;
+						case TableIdle:
+							pairType = PairType.IDLE;
+							break;
+						case DealerLogout:
+							pairType = PairType.IDLE;
+							break;
+						default:
+							throw new Exception(" unexpected second event type " + second.eventType);
+					}
+					break;
+
+				case DealerLogout:
+						throw new RuntimeException("Dealer Logout should never have a following event");
+
+				default:
+					System.out.println(" bad first event type " + first.getEventType());
+
+
+
+
+			}
+
+
+		}
+
+
+	}
+
 
 
 }

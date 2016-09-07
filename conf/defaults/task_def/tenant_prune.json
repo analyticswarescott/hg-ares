@@ -4,6 +4,7 @@
   "author": "aw",
   "scope" : "system",
   "body": {
+	"scope" : "tenant",
 	"task_type" : "tenant_prune",
 	"name" : "Tenant prune task",
 	"memory_resource_weighting" : 0.01,

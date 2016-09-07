@@ -2,8 +2,9 @@
   "display_name": "Dead Spread Calculatorer",
   "description": " calculate dead spread continously ",
   "author": "aw",
-  "scope" : "tenant",
+  "scope" : "system",
   "body": {
+    "scope" : "system",
 	"task_type" : "dead_spread_calculator",
 	"name" : "dead_spread_calculator",
 	"memory_resource_weighting" : 0.01,
