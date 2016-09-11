@@ -105,6 +105,7 @@ public class DeadSpreadCalculator extends AbstractTask {
 
 
 
+
 		//continually poll for status
 		do {
 
@@ -155,15 +156,20 @@ public class DeadSpreadCalculator extends AbstractTask {
 			return;
 		}
 
+		//get any updates to the task def TODO: improve base framework so we don't need this call
+		TaskDef fromDB = service.getUpdatedTaskDef(taskDef, taskDef.getTenant().getTenantID());
+		//System.out.println(JSONUtils.objectToString(taskDef));
+		//System.out.println(JSONUtils.objectToString(fromDB));
+		taskDef = fromDB;
 
 		//determine zkWatermark
 		zkWatermark = service.get(taskDef, HIGH_WATERMARK, Instant.class);
 		if (zkWatermark == null) {
-			LOGGER.error(" last watermark is null ");
+			LOGGER.debug(" last watermark is null ");
 			zkWatermark = Instant.ofEpochMilli(0);
 		}
 		else {
-			LOGGER.error("DEBUG: last watermark is : " + zkWatermark);
+			LOGGER.debug("last watermark is : " + zkWatermark);
 		}
 
 
@@ -174,15 +180,15 @@ public class DeadSpreadCalculator extends AbstractTask {
 		//calculate watermark to use -- TODO: push to a base class
 		long milliWatermark =0;
 		if (taskDef.getFixedWatermark() != null) {
-			milliWatermark = Timestamp.valueOf(taskDef.getFixedWatermark()).toInstant().toEpochMilli();
-			LOGGER.error("DEBUG: ±±±±±±±±±±±±±±± using one-time fixed watermark of " + Instant.ofEpochMilli(milliWatermark));
+			milliWatermark = Long.parseLong(taskDef.getFixedWatermark());
+			LOGGER.warn("±±±±±±±±±±±±± using fixed watermark =========:  " + Instant.ofEpochMilli(milliWatermark));
 		}
 		else {
 			long ls = zkWatermark.toEpochMilli();
 			if (ls > 0 ) { //go back 1 hour from previous high to pick up any lagging events
 				milliWatermark = zkWatermark.minus(1, ChronoUnit.HOURS).toEpochMilli();
 			}
-			LOGGER.error("DEBUG: using calculated last-processed timestamp of " + Instant.ofEpochMilli(milliWatermark));
+			LOGGER.warn("==using calculated last-processed timestamp of " + Instant.ofEpochMilli(milliWatermark));
 		}
 		//set watermark to use from here
 		Instant maxTs = Instant.ofEpochMilli(milliWatermark);
@@ -215,7 +221,7 @@ public class DeadSpreadCalculator extends AbstractTask {
 
 				ps.setString(1, taskDef.getTenant().getTenantID());
 
-				System.out.println(ps.toString());
+				LOGGER.debug( "Dealer down selection SQL: " + ps.toString());
 				ResultSet rs = ps.executeQuery();
 
 				int rowsProcessed = 0;
@@ -230,7 +236,7 @@ public class DeadSpreadCalculator extends AbstractTask {
 					Timestamp auditTs = rs.getTimestamp("audit_insert_ts");
 
 
-					LOGGER.error("reading DDID: " + DDID
+					LOGGER.debug("reading DDID: " + DDID
 							+ " ended " + mysqlTsToZulu(ddEnd) + " (" + ddEnd + ")");
 
 					DealerDown dd = new DealerDown(DDID,  ddStart, ddEnd, table_id, siteID, dealerID);
@@ -248,7 +254,7 @@ public class DeadSpreadCalculator extends AbstractTask {
 					rowsProcessed++;
 				}
 
-				LOGGER.error("DEBUG: processed record count: " + rowsProcessed);
+				LOGGER.warn(" processed record count: " + rowsProcessed);
 
 
 			}
@@ -264,23 +270,8 @@ public class DeadSpreadCalculator extends AbstractTask {
 		}
 
 
-		//increment the poll count
-		pollCount++;
-
-		//remove any one-time fixed watermark and save the task doc
-		if (taskDef.getFixedWatermark() != null) {
-			taskDef.setFixedWatermark(null);
-			service.updateTaskDefDocument(taskDef);
-		}
-		else {
-			if (milliWatermark > maxTs.toEpochMilli()) {
-				throw new Exception(" timestamp error -- maxTs < inital watermark");
-			}
-		}
-
-
 		//update cluster
-		LOGGER.error("DEBUG: =======================  setting watermark to " + maxTs);
+		LOGGER.warn("=================  setting Zookeeper watermark to " + maxTs);
 		service.put(taskDef, HIGH_WATERMARK, maxTs);
 
 	}
@@ -312,11 +303,6 @@ public class DeadSpreadCalculator extends AbstractTask {
 	public Instant getZkWatermark() { return zkWatermark; }
 	private Instant zkWatermark;
 
-	/**
-	 * The number of times we've run
-	 */
-	public long getPollCount() { return pollCount; }
-	private long pollCount;
 
 	/**
 	 * The number of times we've failed

@@ -142,7 +142,7 @@ public class HGResource   {
 			TaskDef taskDef = doc.getBodyAsObject(TaskDef.class);
 
 
-			if (timestamp == null) {
+			if (timestamp.equals("-1")) {
 				logger.warn(" setting fixed watermark of task " + doc.getKey() + " to null ");
 				taskDef.setFixedWatermark(null);
 			} else {

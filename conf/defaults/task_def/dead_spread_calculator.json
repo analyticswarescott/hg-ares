@@ -1,5 +1,5 @@
 {
-  "display_name": "Dead Spread Calculatorer",
+  "display_name": "Dead Spread Calculator",
   "description": " calculate dead spread continously ",
   "author": "aw",
   "scope" : "tenant",
@@ -10,7 +10,7 @@
 	"memory_resource_weighting" : 0.01,
 	"cpu_resource_weighting": 0.01,
 	"schedule" : { "type" : "perpetual" },
-    "fixed_watermark" : "2016-09-10 14:00:00.0",
+    "fixed_watermark" : "1473530400000",
 	"config" : {
 
       "db" : {

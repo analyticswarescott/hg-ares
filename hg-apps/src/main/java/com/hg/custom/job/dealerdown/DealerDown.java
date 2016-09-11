@@ -272,7 +272,7 @@ public class DealerDown {
                             break;
                         case IGNORE:
                             //TODO: note this in audit if required
-                            System.out.println(" IGNORED PAIR ===============   "  + pair.toString());
+                            LOGGER.debug(" IGNORED PAIR ===============   "  + pair.toString());
                             break;
                         default:
                             throw new Exception(" bad pair type " + pair.getPairType());
