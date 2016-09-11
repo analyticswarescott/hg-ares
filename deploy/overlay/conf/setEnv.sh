@@ -30,8 +30,8 @@ source $ARES_HOME/conf/custom_env.sh
 
 
 #custom jars
--DCUSTOM_WEBAPP_PKG=com.hg.custom.rest
--DCUSTOM_WEBAPP_JAR=/opt/aw/lib/rest/hg-apps-1.0.0-SNAPSHOT.jar
+export CUSTOM_WEBAPP_PKG=com.hg.custom.rest
+export CUSTOM_WEBAPP_JAR=/opt/aw/lib/rest/hg-apps-1.0.0-SNAPSHOT.jar
 
 
 #

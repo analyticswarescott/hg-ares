@@ -183,12 +183,11 @@ public class DealerDown {
         psDelete.executeUpdate();
 
         PreparedStatement psAudit = conn.prepareStatement(" insert into " + dbConfig.get(DBConfig.DB_SCHEMA) + " .audit_dead_spread "
-         + " (dealer_down_id, audit, audit_ts ) values (?,?,?)"
+         + " (dealer_down_id, audit ) values (?,?)"
         );
 
         psAudit.setString(1, DDID);
         psAudit.setString(2, sb.toString());
-        psAudit.setTimestamp(3, Timestamp.from(Instant.now()));
 
         psAudit.executeUpdate();
 
