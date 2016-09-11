@@ -2,15 +2,17 @@
   "display_name": "Dead Spread Calculatorer",
   "description": " calculate dead spread continously ",
   "author": "aw",
-  "scope" : "system",
+  "scope" : "tenant",
   "body": {
-    "scope" : "system",
+    "scope" : "tenant",
 	"task_type" : "dead_spread_calculator",
 	"name" : "dead_spread_calculator",
 	"memory_resource_weighting" : 0.01,
 	"cpu_resource_weighting": 0.01,
 	"schedule" : { "type" : "perpetual" },
+    "fixed_watermark" : "2016-09-10 14:00:00.0",
 	"config" : {
+
       "db" : {
         "db_host" : "192.168.38.4",
         "db_port" : "3306",

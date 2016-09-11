@@ -2,13 +2,21 @@ package com.hg.custom.rest;
 
 import com.aw.common.hadoop.structure.HadoopPurpose;
 import com.aw.common.messaging.Topic;
+import com.aw.common.rdbms.DBConfig;
+import com.aw.common.rest.security.Impersonation;
+import com.aw.common.task.TaskDef;
 import com.aw.common.tenant.Tenant;
+import com.aw.document.Document;
+import com.aw.document.DocumentMgr;
+import com.aw.document.DocumentType;
 import com.aw.platform.PlatformMgr;
 import com.aw.platform.restcluster.LocalRestMember;
 import com.aw.platform.restcluster.RestCluster;
 import com.aw.rest.inject.DGBinder;
 import com.aw.tenant.TenantMgr;
 import com.aw.unity.dg.CommonField;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hg.custom.job.dealerdown.DealerDown;
 import io.swagger.annotations.Api;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -24,7 +32,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -38,12 +48,14 @@ public class HGResource   {
 	protected  Provider<LocalRestMember> restMember;
 	protected  Provider<RestCluster> restCluster;
 	protected  TenantMgr tenantMgr;
+	protected  Provider<DocumentMgr> docMgr;
 
 	static Logger logger = LoggerFactory.getLogger(HGResource.class);
 
 	@Inject
 	public HGResource(Provider<PlatformMgr> platformProvider, Provider<LocalRestMember> restMember,
-					  Provider<RestCluster> restCluster, TenantMgr tenantMgr) {
+					  Provider<RestCluster> restCluster, TenantMgr tenantMgr,
+					  Provider<DocumentMgr> docMgr) {
 
 
 		//TODO: re-factor to allow custom resources to sit atop ARES
@@ -52,6 +64,7 @@ public class HGResource   {
 		this.restMember = restMember;
 		this.restCluster = restCluster;
 		this.tenantMgr = tenantMgr;
+		this.docMgr = docMgr;
 
 		//logger.error("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§ HG RESOURCE INIT §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
 
@@ -88,9 +101,7 @@ public class HGResource   {
 					, is
 			);
 
-			System.out.println("REST:  §§§§§§§§§§§§§§±±±±±±± file  " + fileName + " added to HDFS and ticketed for processing ");
-
-
+			//System.out.println("REST:  §§§§§§§§§§§§§§±±±±±±± file  " + fileName + " added to HDFS and ticketed for processing ");
 			return Response.status(Response.Status.OK).build();
 
 		} catch (WebApplicationException we) {
@@ -103,7 +114,52 @@ public class HGResource   {
 	}
 
 
+	@GET
+	@Path("audit/dealer_down/{id}")
+	public String getDealerDownAudit(@PathParam("id") String id) throws  Exception {
 
+		Document doc = docMgr.get().getSysDocHandler().getDocument(DocumentType.TASK_DEF, "dead_spread_calculator");
+		TaskDef taskDef = doc.getBodyAsObject(TaskDef.class);
+
+		JSONObject config = taskDef.getConfig();
+
+		JSONObject dbc = config.getJSONObject("db");
+		HashMap<String,String> dbConfig = new ObjectMapper().readValue(dbc.toString(), HashMap.class);
+
+		return DealerDown.getAudit(dbConfig, id);
+
+	}
+
+	@PUT
+	@Path("job/watermark/{job_name}/{siteId}/{timestamp}")
+	public Response setFixedJobWatermark(@PathParam("job_name") String jobName, @PathParam("siteId") String siteID,
+									   @PathParam("timestamp") String timestamp) throws Exception {
+
+
+		Impersonation.impersonateTenant(siteID);
+		try {
+			Document doc = docMgr.get().getDocHandler().getDocument(DocumentType.TASK_DEF, jobName);
+			TaskDef taskDef = doc.getBodyAsObject(TaskDef.class);
+
+
+			if (timestamp == null) {
+				logger.warn(" setting fixed watermark of task " + doc.getKey() + " to null ");
+				taskDef.setFixedWatermark(null);
+			} else {
+				logger.warn(" setting fixed watermark of task " + doc.getKey() + "  to  " + timestamp);
+				taskDef.setFixedWatermark(timestamp);
+			}
+
+			doc.setBodyFromObject(taskDef);
+			docMgr.get().getDocHandler().updateDocument(doc);
+
+			return Response.ok("timestamp set ").build();
+		}
+		finally {
+			Impersonation.unImpersonate();
+		}
+
+	}
 
 
 

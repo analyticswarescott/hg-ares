@@ -81,6 +81,11 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		//run an archive now, running as tomorrow
 		//testArchive();
 
+		while (true) {
+			System.out.println(" ===== running perpetually ======= ");
+			Thread.sleep(5000);
+		}
+
 	}
 
 /*
@@ -200,28 +205,28 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		TestDependencies.getPlatformMgr().get().setPlatform(null);
 
 
-		provisionTenant("1");
+		provisionTenant("20");
 
 		//fire array of events via REST
 		RestClient client = new RestClient(NodeRole.REST, TestDependencies.getPlatformMgr().get());
-		RestResponse resp = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event.json"));
+		RestResponse resp = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/20/event", DataFeedUtils.getInputStream("test_game_event.json"));
 
 
 		System.out.println(" event rest call 1 status: " + resp.getStatusCode());
 		System.out.println(resp.payloadToString());
 
 		//test UPSERT-tolerance
-		RestResponse resp2 = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event.json"));
+		RestResponse resp2 = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/20/event", DataFeedUtils.getInputStream("test_game_event.json"));
 
 		System.out.println(" event rest call 2 status: " + resp2.payloadToString());
 
 		//send event 2 with a different ID
-		RestResponse resp3 = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/1/event", DataFeedUtils.getInputStream("test_game_event2.json"));
+		RestResponse resp3 = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/20/event", DataFeedUtils.getInputStream("test_game_event2.json"));
 
 		System.out.println(" event rest call 3 status: " + resp3.payloadToString());
 
 		//make sure we get the counts we expect
-		DataFeedUtils.awaitESResult(ESKnownIndices.EVENTS_ES, Tenant.forId("1"), "GameEvent", 2, 300);
+		DataFeedUtils.awaitESResult(ESKnownIndices.EVENTS_ES, Tenant.forId("20"), "GameEvent", 2, 300);
 
 		//count JDBC rows for now -- TODO: assert contents of at least 1 row to check transformations
 
@@ -243,7 +248,7 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		Map<TaskDef, TaskStatus> status = TestDependencies.getTaskService().get().getTaskStatus();
 
 		//make sure we have the right number of tasks
-		assertEquals(4, status.size());
+		assertEquals(2, status.size());
 
 		TaskDef taskDef = TestDependencies.getDocs().get().getDocument(DocumentType.TASK_DEF, "platform_status_poller").getBodyAsObject(TaskDef.class);
 
@@ -251,8 +256,8 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		TaskStatus taskStatus = status.get(taskDef);
 		assertEquals(PlatformStatusPoller.TYPE, taskStatus.getTaskDef().getTaskTypeName());
 
-		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("0"), "topic_status", DataFeedUtils.AT_LEAST_1, 300);
-		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("0"), "perf_stat", DataFeedUtils.AT_LEAST_1, 30);
+		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("20"), "topic_status", DataFeedUtils.AT_LEAST_1, 300);
+		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("20"), "perf_stat", DataFeedUtils.AT_LEAST_1, 30);
 
 		/*//verify zookeeper for tenant 1 TODO: assert full tree once task GUIDs can be resolved
 		ZkAccessor zk = new DefaultZkAccessor(TestDependencies.getPlatform().get(), Hive.SYSTEM);

@@ -1,6 +1,5 @@
 package com.hg.custom.job;
 
-import com.aw.common.messaging.Topic;
 import com.aw.common.rdbms.DBConfig;
 import com.aw.common.rdbms.DBMgr;
 import com.aw.common.rest.security.SecurityUtil;
@@ -8,30 +7,25 @@ import com.aw.common.task.*;
 import com.aw.common.task.TaskStatus.State;
 import com.aw.common.task.exceptions.TaskException;
 import com.aw.common.task.exceptions.TaskInitializationException;
-import com.aw.common.tenant.Tenant;
 import com.aw.common.util.JSONUtils;
 import com.aw.common.util.TimeSource;
 import com.aw.document.jdbc.JDBCProvider;
 import com.aw.platform.PlatformMgr;
-import com.aw.platform.monitoring.*;
 import com.aw.platform.restcluster.PlatformController;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hg.custom.job.dealerdown.DealerDown;
 import kafka.common.FailedToSendMessageException;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONObject;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
 import java.util.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -49,7 +43,10 @@ public class DeadSpreadCalculator extends AbstractTask {
 	private static final Logger LOGGER = Logger.getLogger(DeadSpreadCalculator.class);
 
 	//task data, last time this task polled
-	private static final String LAST_CALC = "last_poll";
+	private static final String HIGH_WATERMARK = "watermark";
+
+	public static final String  AUDIT_TS_TIMEZONE = "America/Los_Angeles";
+
 
 	@Override
 	public void initialize(TaskContext context) throws TaskInitializationException {
@@ -59,6 +56,7 @@ public class DeadSpreadCalculator extends AbstractTask {
 		this.lock = new ReentrantLock();
 		this.interval = this.lock.newCondition();
 		this.taskDef = context.getTaskDef();
+
 	}
 
 	@JsonIgnore
@@ -70,18 +68,18 @@ public class DeadSpreadCalculator extends AbstractTask {
 			TaskStatus ret = new TaskStatus();
 			ret.setState(State.RUNNING);
 
-			Instant lastStatus = service.get(taskDef, LAST_CALC, Instant.class);
-			if (lastStatus == null) {
-				lastStatus = Instant.MIN;
+		/*	Instant zkWatermark = service.get(taskDef, HIGH_WATERMARK, Instant.class);
+			if (zkWatermark == null) {
+				zkWatermark = Instant.MIN;
 			}
 
 			if (pollCount > 0) {
-				ret.setStatusMessage("last status poll: " + lastStatus);
+				ret.setStatusMessage("last status poll: " + zkWatermark);
 			}
 
 			else {
 				ret.setStatusMessage("no polls yet");
-			}
+			}*/
 
 			//set properties based on our properties
 			JSONUtils.updateFromString(JSONUtils.objectToString(this), ret.getProperties());
@@ -103,11 +101,9 @@ public class DeadSpreadCalculator extends AbstractTask {
 		//set up system access for this thread
 		SecurityUtil.setThreadSystemAccess();
 
-		//initialize lastStatus
-		lastStatus = service.get(taskDef, LAST_CALC, Instant.class);
-		if (lastStatus == null) {
-			lastStatus = Instant.ofEpochMilli(0);
-		}
+
+
+
 
 		//continually poll for status
 		do {
@@ -155,34 +151,47 @@ public class DeadSpreadCalculator extends AbstractTask {
 
 		PlatformController.PlatformState state = platformMgr.newClient().getPlatformState();
 		if (state != PlatformController.PlatformState.RUNNING) {
-			LOGGER.warn(" Status poll cancelled due to platform state: " + state + " deferring status polling untill RUNNING state is detected ");
+			LOGGER.warn(" Task cancelled due to platform state: " + state + " deferring status polling untill RUNNING state is detected ");
 			return;
 		}
 
-		LOGGER.error("DEBUG: ---------------------------------Calculating dead spread -- ");
-		System.out.println(" =-=-=-=-=-= Last status time was: " + lastStatus);
 
-		//get config
-		JSONObject config = taskDef.getConfig();
-
-		JSONObject dbc = config.getJSONObject("db");
-		HashMap<String,String> dbConfig =
-		new ObjectMapper().readValue(dbc.toString(), HashMap.class);
-
-		//System.out.println(config.toString());
-
-		//calculate timestamp
-		long ls = lastStatus.toEpochMilli();
-		long milliWatermark  = 0;
-		if (ls > 0 ) { //go back 10 minutes
-			milliWatermark = lastStatus.minus(1, ChronoUnit.DAYS).toEpochMilli();
+		//determine zkWatermark
+		zkWatermark = service.get(taskDef, HIGH_WATERMARK, Instant.class);
+		if (zkWatermark == null) {
+			LOGGER.error(" last watermark is null ");
+			zkWatermark = Instant.ofEpochMilli(0);
 		}
+		else {
+			LOGGER.error("DEBUG: last watermark is : " + zkWatermark);
+		}
+
+
+
+
+		Map<String, String> dbConfig = taskDef.getDBConfig();
+
+		//calculate watermark to use -- TODO: push to a base class
+		long milliWatermark =0;
+		if (taskDef.getFixedWatermark() != null) {
+			milliWatermark = Timestamp.valueOf(taskDef.getFixedWatermark()).toInstant().toEpochMilli();
+			LOGGER.error("DEBUG: ±±±±±±±±±±±±±±± using one-time fixed watermark of " + Instant.ofEpochMilli(milliWatermark));
+		}
+		else {
+			long ls = zkWatermark.toEpochMilli();
+			if (ls > 0 ) { //go back 1 hour from previous high to pick up any lagging events
+				milliWatermark = zkWatermark.minus(1, ChronoUnit.HOURS).toEpochMilli();
+			}
+			LOGGER.error("DEBUG: using calculated last-processed timestamp of " + Instant.ofEpochMilli(milliWatermark));
+		}
+		//set watermark to use from here
+		Instant maxTs = Instant.ofEpochMilli(milliWatermark);
 
 
 		JDBCProvider provider = null;
 		Connection conn = null;
 		PreparedStatement ps = null;
-		Instant maxTs = Instant.ofEpochMilli(0);
+
 
 		try {
 			if (provider == null) {
@@ -199,8 +208,12 @@ public class DeadSpreadCalculator extends AbstractTask {
 				 ps = conn.prepareStatement(" select * from " + dbConfig.get(DBConfig.DB_SCHEMA) + "."
 								 + " fact_dealer_down where audit_insert_ts >= FROM_UNIXTIME(" + milliWatermark + "/1000) "
 
-						 + " and active_minutes is null  " //TODO: DEBUG - to speed the process of seeing all records
+						 + " and site_id = ? "
+						// + " and audit_insert_ts >  '2016-08-03 00:00:00'" //TODO: this excludes pre-end-round time
+						// + " and active_minutes is null  " //TODO: DEBUG - to speed the process of seeing all records
 				 );
+
+				ps.setString(1, taskDef.getTenant().getTenantID());
 
 				System.out.println(ps.toString());
 				ResultSet rs = ps.executeQuery();
@@ -213,23 +226,29 @@ public class DeadSpreadCalculator extends AbstractTask {
 					String table_id = rs.getString("table_id");
 					String siteID = rs.getString("site_id");
 					String dealerID = rs.getString("dealer_id");
+
 					Timestamp auditTs = rs.getTimestamp("audit_insert_ts");
 
-					LOGGER.error("DeadSpreadCalculator:  PROCESSING DDID: " + DDID + " from " + ddEnd);
 
+					LOGGER.error("reading DDID: " + DDID
+							+ " ended " + mysqlTsToZulu(ddEnd) + " (" + ddEnd + ")");
 
 					DealerDown dd = new DealerDown(DDID,  ddStart, ddEnd, table_id, siteID, dealerID);
 					dd.process(dbConfig);
 
-					//update latest processed
-					Instant currentTs = auditTs.toInstant();
-					long diff = currentTs.compareTo(maxTs);
+					//get audit ts as Zulu
+					Instant currentAuditTsUTC = mysqlTsToZulu(auditTs);
+
+					long diff = currentAuditTsUTC.compareTo(maxTs);
+					//if current TS is > max, set max
 					if (diff > 0) {
-						maxTs = auditTs.toInstant();
+						maxTs = currentAuditTsUTC;
 					}
 
 					rowsProcessed++;
 				}
+
+				LOGGER.error("DEBUG: processed record count: " + rowsProcessed);
 
 
 			}
@@ -248,19 +267,27 @@ public class DeadSpreadCalculator extends AbstractTask {
 		//increment the poll count
 		pollCount++;
 
-		//mark the highest timestamp processed
-		lastStatus  = maxTs;
+		//remove any one-time fixed watermark and save the task doc
+		if (taskDef.getFixedWatermark() != null) {
+			taskDef.setFixedWatermark(null);
+			service.updateTaskDefDocument(taskDef);
+		}
+		else {
+			if (milliWatermark > maxTs.toEpochMilli()) {
+				throw new Exception(" timestamp error -- maxTs < inital watermark");
+			}
+		}
+
 
 		//update cluster
-		service.put(taskDef, LAST_CALC, lastStatus);
+		LOGGER.error("DEBUG: =======================  setting watermark to " + maxTs);
+		service.put(taskDef, HIGH_WATERMARK, maxTs);
 
 	}
 
-
-	//TODO: threading (limit is probably good enough)
-
-
-
+	private Instant mysqlTsToZulu(Timestamp ts) {
+		return ZonedDateTime.of(ts.toLocalDateTime(), ZoneId.of(AUDIT_TS_TIMEZONE)).toInstant();
+	}
 
 
 	@Override
@@ -282,8 +309,8 @@ public class DeadSpreadCalculator extends AbstractTask {
 	/**
 	 * The last time we successfully ran
 	 */
-	public Instant getLastStatus() { return lastStatus; }
-	private Instant lastStatus;
+	public Instant getZkWatermark() { return zkWatermark; }
+	private Instant zkWatermark;
 
 	/**
 	 * The number of times we've run

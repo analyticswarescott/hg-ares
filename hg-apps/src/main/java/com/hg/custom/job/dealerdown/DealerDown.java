@@ -132,7 +132,7 @@ public class DealerDown {
         return sb.toString();
     }
 
-    public void recordAudit()  throws Exception {
+    public void recordAudit(Connection conn, Map<String, String> dbConfig)  throws Exception {
         StringBuffer sb = new StringBuffer();
         sb.append("<html>");
 
@@ -170,9 +170,30 @@ public class DealerDown {
         sb.append("</table>");
         sb.append("</html>");
 
-        File a = new File("/tmp/ddaudit.html");
+/*        File a = new File("/tmp/ddaudit_" + DDID +  ".html");
         FileUtils.forceDelete(a);
-        FileUtils.writeStringToFile(a, sb.toString());
+        FileUtils.writeStringToFile(a, sb.toString());*/
+
+
+        conn.setAutoCommit(false);
+
+        PreparedStatement psDelete = conn.prepareStatement(" delete from " + dbConfig.get(DBConfig.DB_SCHEMA) +
+          ".audit_dead_spread where dealer_down_id = ?");
+        psDelete.setString(1, DDID);
+        psDelete.executeUpdate();
+
+        PreparedStatement psAudit = conn.prepareStatement(" insert into " + dbConfig.get(DBConfig.DB_SCHEMA) + " .audit_dead_spread "
+         + " (dealer_down_id, audit, audit_ts ) values (?,?,?)"
+        );
+
+        psAudit.setString(1, DDID);
+        psAudit.setString(2, sb.toString());
+        psAudit.setTimestamp(3, Timestamp.from(Instant.now()));
+
+        psAudit.executeUpdate();
+
+        conn.commit();
+
 
     }
 
@@ -265,7 +286,7 @@ public class DealerDown {
             }
 
             double totalSeconds = inactiveSeconds + activeSeconds;
-            LOGGER.error("DEBUG: DEAD TIME ratio for DD [Active]/[Total]"  + DDID + ": " + activeSeconds + "/"
+            LOGGER.debug("DEAD TIME ratio for DD [Active]/[Total]" + DDID + ": " + activeSeconds + "/"
                     + totalSeconds);
 
 
@@ -287,7 +308,7 @@ public class DealerDown {
                 throw new RuntimeException(" rows affected should have been 1, was " + rows + " DDID: " + DDID);
             }
 
-            recordAudit();
+            recordAudit(conn, dbConfig);
 
         }
         finally {
@@ -308,5 +329,34 @@ public class DealerDown {
 
 
 
+    public static String getAudit(Map<String, String> dbConfig, String DDID) throws Exception{
+
+        JDBCProvider provider = (JDBCProvider) Class.forName(dbConfig.get(DBConfig.DB_PROVIDER)).newInstance();
+
+        try (Connection conn = DBMgr.getConnection(provider.getJDBCURL(dbConfig), dbConfig.get(DBConfig.DB_USER)
+                , dbConfig.get(DBConfig.DB_PASS))) {
+
+            PreparedStatement ps = conn.prepareStatement(" select audit from " + dbConfig.get(DBConfig.DB_SCHEMA) +
+              ".audit_dead_spread where dealer_down_id = ? ");
+
+            ps.setString(1,DDID);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("audit");
+            }
+            else {
+                return " audit not found for "  + DDID;
+            }
+
+        }
+
+
+
+
+
+
+    }
 
 }
