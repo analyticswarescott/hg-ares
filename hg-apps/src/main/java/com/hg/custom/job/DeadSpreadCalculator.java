@@ -68,19 +68,6 @@ public class DeadSpreadCalculator extends AbstractTask {
 			TaskStatus ret = new TaskStatus();
 			ret.setState(State.RUNNING);
 
-		/*	Instant zkWatermark = service.get(taskDef, HIGH_WATERMARK, Instant.class);
-			if (zkWatermark == null) {
-				zkWatermark = Instant.MIN;
-			}
-
-			if (pollCount > 0) {
-				ret.setStatusMessage("last status poll: " + zkWatermark);
-			}
-
-			else {
-				ret.setStatusMessage("no polls yet");
-			}*/
-
 			//set properties based on our properties
 			JSONUtils.updateFromString(JSONUtils.objectToString(this), ret.getProperties());
 
@@ -181,7 +168,7 @@ public class DeadSpreadCalculator extends AbstractTask {
 		long milliWatermark =0;
 		if (taskDef.getFixedWatermark() != null) {
 			milliWatermark = Long.parseLong(taskDef.getFixedWatermark());
-			LOGGER.warn("±±±±±±±±±±±±± using fixed watermark =========:  " + Instant.ofEpochMilli(milliWatermark));
+			LOGGER.warn("==== using fixed watermark =========:  " + Instant.ofEpochMilli(milliWatermark));
 		}
 		else {
 			long ls = zkWatermark.toEpochMilli();

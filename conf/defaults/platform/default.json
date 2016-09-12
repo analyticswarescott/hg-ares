@@ -70,7 +70,7 @@
 					"log4j.logger.com.aw.compute.streams.processor.framework.ProcessorFunction" : "DEBUG"
 				},
 				"spark_daemon_java_opts": {
-					"spark.deploy.recoveryMode" : "ZOOKEEPER",
+					"spark.deploy.recoveryMode" : "NONE",
 					"spark.deploy.zookeeper.url" : "localhost"
 				}
 
