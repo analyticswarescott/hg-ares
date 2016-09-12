@@ -5,7 +5,7 @@ PID_PATH_NAME=/tmp/rest-pid
 LOG_FILE=$ARES_HOME/log/rest/rest_startup.log
 LOG4J_FILE="$CONF_DIRECTORY/log4j.vm.properties"
 export LOG4J_CONFIG_FILE=$LOG4J_FILE
-export $REST_SYS_PROPS="-DCUSTOM_WEBAPP_PKG=com.hg.custom.rest -DCUSTOM_WEBAPP_JAR=/opt/aw/lib/rest/hg-apps-1.0.0-SNAPSHOT.jar"
+export REST_SYS_PROPS="-DCUSTOM_WEBAPP_PKG=com.hg.custom.rest -DCUSTOM_WEBAPP_JAR=/opt/aw/lib/rest/hg-apps-1.0.0-SNAPSHOT.jar"
 case $1 in
     start)
         if [ ! -f $LOG_FILE ]; then
