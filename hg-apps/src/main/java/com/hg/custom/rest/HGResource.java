@@ -111,6 +111,7 @@ public class HGResource   {
 
 
 			//write to cold storage
+			is.reset();
 			coldStorageProvider.storeStream(eventType + "-" + fileName, is);
 
 
