@@ -1,9 +1,11 @@
 package com.hg.custom.rest;
 
+import com.aw.common.disaster.DefaultColdStorageProvider;
 import com.aw.common.hadoop.structure.HadoopPurpose;
 import com.aw.common.messaging.Topic;
 import com.aw.common.rdbms.DBConfig;
 import com.aw.common.rest.security.Impersonation;
+import com.aw.common.system.EnvironmentSettings;
 import com.aw.common.task.TaskDef;
 import com.aw.common.tenant.Tenant;
 import com.aw.document.Document;
@@ -50,6 +52,9 @@ public class HGResource   {
 	protected  TenantMgr tenantMgr;
 	protected  Provider<DocumentMgr> docMgr;
 
+	public static final String COLD_STORAGE_NAMESPACE_PREFIX = "hgdr.analyticsware.com";
+	protected DefaultColdStorageProvider coldStorageProvider;
+
 	static Logger logger = LoggerFactory.getLogger(HGResource.class);
 
 	@Inject
@@ -66,6 +71,9 @@ public class HGResource   {
 		this.tenantMgr = tenantMgr;
 		this.docMgr = docMgr;
 
+
+		coldStorageProvider = new DefaultColdStorageProvider();
+		coldStorageProvider.init(COLD_STORAGE_NAMESPACE_PREFIX);
 		//logger.error("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§ HG RESOURCE INIT §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
 
 	}
@@ -100,6 +108,11 @@ public class HGResource   {
 					, fileID
 					, is
 			);
+
+
+			//write to cold storage
+			coldStorageProvider.storeStream(eventType + "-" + fileName, is);
+
 
 			//System.out.println("REST:  §§§§§§§§§§§§§§±±±±±±± file  " + fileName + " added to HDFS and ticketed for processing ");
 			return Response.status(Response.Status.OK).build();

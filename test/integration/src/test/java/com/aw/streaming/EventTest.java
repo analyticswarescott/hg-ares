@@ -232,7 +232,7 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 
 		//can be timing if ES is too fast
 		System.out.println("========== ES passed == pausing to allow completion of JDBC target insert"); //TODO: do scalar count of external DB
-		Thread.sleep(3000000);
+		Thread.sleep(3000);
 	/*	assertEquals(" expect 2 game event rows ", 2,
 				TestDependencies.getDBMgr().get().executeScalarCountSelect(Tenant.forId("1"), "select count(*) as cnt from gameevent"));
 */
