@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.aw.common.disaster.DefaultColdStorageProvider;
 import com.aw.common.system.EnvironmentSettings;
 import com.aw.common.util.RestResponse;
 import com.sun.tools.doclint.Env;
@@ -72,7 +73,18 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 	@Test
 	public void eventTest() throws Exception {
 
-		//test full file
+
+		DefaultColdStorageProvider coldStorageProvider = null;
+		if (EnvironmentSettings.fetch(EnvironmentSettings.Setting.COLD_STORE_ENABLED).equals("true")) {
+			//clear any test cold storage
+			coldStorageProvider = new DefaultColdStorageProvider();
+			coldStorageProvider.init(EnvironmentSettings.fetch(EnvironmentSettings.Setting.COLD_STORE_NAMESPACE_PREFIX));
+
+			for (String namespace : coldStorageProvider.listNamespaces()) {
+				coldStorageProvider.deleteNamespace(namespace);
+			}
+
+		}
 
 
 		testEventToRest();
@@ -81,10 +93,18 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		//run an archive now, running as tomorrow
 		//testArchive();
 
-		while (true) {
+		if (EnvironmentSettings.fetch(EnvironmentSettings.Setting.COLD_STORE_ENABLED).equals("true")) {
+			for (String namespace : coldStorageProvider.listNamespaces()) {
+				System.out.println(" cold store namespace ======> " + namespace);
+			}
+		}
+
+
+
+		/*while (true) {
 			System.out.println(" ===== running perpetually ======= ");
 			Thread.sleep(5000);
-		}
+		}*/
 
 	}
 
@@ -256,8 +276,8 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		TaskStatus taskStatus = status.get(taskDef);
 		assertEquals(PlatformStatusPoller.TYPE, taskStatus.getTaskDef().getTaskTypeName());
 
-		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("20"), "topic_status", DataFeedUtils.AT_LEAST_1, 300);
-		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("20"), "perf_stat", DataFeedUtils.AT_LEAST_1, 30);
+		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("0"), "topic_status", DataFeedUtils.AT_LEAST_1, 300);
+		DataFeedUtils.awaitESResult(ESKnownIndices.STATUS, Tenant.forId("0"), "perf_stat", DataFeedUtils.AT_LEAST_1, 30);
 
 		/*//verify zookeeper for tenant 1 TODO: assert full tree once task GUIDs can be resolved
 		ZkAccessor zk = new DefaultZkAccessor(TestDependencies.getPlatform().get(), Hive.SYSTEM);

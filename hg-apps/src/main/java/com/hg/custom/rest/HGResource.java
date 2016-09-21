@@ -52,7 +52,7 @@ public class HGResource   {
 	protected  TenantMgr tenantMgr;
 	protected  Provider<DocumentMgr> docMgr;
 
-	public static final String COLD_STORAGE_NAMESPACE_PREFIX = "hgdr.analyticsware.com";
+	//public static final String COLD_STORAGE_NAMESPACE_PREFIX = "hgdr.analyticsware.com";
 	protected DefaultColdStorageProvider coldStorageProvider;
 
 	static Logger logger = LoggerFactory.getLogger(HGResource.class);
@@ -63,7 +63,6 @@ public class HGResource   {
 					  Provider<DocumentMgr> docMgr) {
 
 
-		//TODO: re-factor to allow custom resources to sit atop ARES
 
 		this.platformProvider = platformProvider;
 		this.restMember = restMember;
@@ -73,7 +72,7 @@ public class HGResource   {
 
 
 		coldStorageProvider = new DefaultColdStorageProvider();
-		coldStorageProvider.init(COLD_STORAGE_NAMESPACE_PREFIX);
+		coldStorageProvider.init(EnvironmentSettings.fetch(EnvironmentSettings.Setting.COLD_STORE_NAMESPACE_PREFIX));
 		//logger.error("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§ HG RESOURCE INIT §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
 
 	}
@@ -93,27 +92,8 @@ public class HGResource   {
 							  String jsonStr) throws WebApplicationException {
 		try {
 
-			//site is tenant
 
-			JSONArray rawJsons = new JSONArray(jsonStr);
-			JSONObject o = rawJsons.getJSONObject(0);
-			String eventType = o.getString(CommonField.EVENT_TYPE_FIELD);
-			String str = rawJsons.toString();
-			InputStream is = new ByteArrayInputStream(str.getBytes());
-
-			String fileID =  UUID.randomUUID().toString(); //to differentiate in case 2 files processed at same milli
-			String fileName = "received_" + Instant.now().toEpochMilli()+ "_" + fileID;
-
-			platformProvider.get().addFile(HadoopPurpose.EVENTS, Topic.EVENT_GROUP, Tenant.forId(siteId), eventType, fileName
-					, fileID
-					, is
-			);
-
-
-			//write to cold storage
-			is.reset();
-			coldStorageProvider.storeStream(eventType + "-" + fileName, is);
-
+			putEvent(jsonStr, siteId, true); //put event to raw, cold storage, and topics
 
 			//System.out.println("REST:  §§§§§§§§§§§§§§±±±±±±± file  " + fileName + " added to HDFS and ticketed for processing ");
 			return Response.status(Response.Status.OK).build();
@@ -128,6 +108,40 @@ public class HGResource   {
 	}
 
 
+	private void putEvent(String jsonStr, String siteId, boolean doColdStore ) throws Exception{
+		//site is tenant
+
+		JSONArray rawJsons = new JSONArray(jsonStr);
+		JSONObject o = rawJsons.getJSONObject(0);
+		String eventType = o.getString(CommonField.EVENT_TYPE_FIELD);
+		String str = rawJsons.toString();
+		InputStream is = new ByteArrayInputStream(str.getBytes());
+
+		String fileID =  UUID.randomUUID().toString(); //to differentiate in case 2 files processed at same milli
+		String fileName = "received_" + Instant.now().toEpochMilli()+ "_" + fileID;
+
+		platformProvider.get().addFile(HadoopPurpose.EVENTS, Topic.EVENT_GROUP, Tenant.forId(siteId), eventType, fileName
+					, fileID
+					, is
+		);
+
+
+		if (doColdStore && EnvironmentSettings.fetch(EnvironmentSettings.Setting.COLD_STORE_ENABLED).equals("true")) {
+			//write to cold storage -- this is skipped on replay and recovery
+			is.reset();
+			coldStorageProvider.storeStream(eventType + "-" + fileName, is); //event type is s3 prefix
+		}
+
+
+	}
+
+
+
+
+
+
+
+//audit and job methods
 	@GET
 	@Path("audit/dealer_down/{id}")
 	public String getDealerDownAudit(@PathParam("id") String id) throws  Exception {
