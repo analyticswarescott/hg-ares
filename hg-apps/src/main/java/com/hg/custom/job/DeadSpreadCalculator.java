@@ -128,6 +128,7 @@ public class DeadSpreadCalculator extends AbstractTask {
 
 			} catch (Exception e) {
 				errorCount++;
+				System.out.println("error using config: " + taskDef.getConfig().toString());
 				throw e;
 			}
 
@@ -194,6 +195,9 @@ public class DeadSpreadCalculator extends AbstractTask {
 
 			if (conn == null) {
 				//get schema-ed connection to the defined target DB
+
+				LOGGER.warn(" connecting to HOST:   " + dbConfig.get(DBConfig.DB_HOST));
+
 				conn = DBMgr.getConnection(provider.getJDBCURL(dbConfig), dbConfig.get(DBConfig.DB_USER)
 						, dbConfig.get(DBConfig.DB_PASS));
 

@@ -12,8 +12,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.aw.common.disaster.DefaultColdStorageProvider;
+import com.aw.common.rest.security.Impersonation;
+import com.aw.common.spark.StreamDef;
 import com.aw.common.system.EnvironmentSettings;
+import com.aw.common.util.JSONUtils;
 import com.aw.common.util.RestResponse;
+import com.aw.document.Document;
 import com.sun.tools.doclint.Env;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -227,6 +231,14 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 
 		provisionTenant("20");
 
+		Impersonation.impersonateTenant("20");
+		Document doc = TestDependencies.getDocs().get().getDocument(DocumentType.TASK_DEF, "dead_spread_calculator");
+
+		TaskDef dsc = doc.getBodyAsObject(TaskDef.class);
+
+		System.out.println(JSONUtils.objectToString(doc));
+
+
 		//fire array of events via REST
 		RestClient client = new RestClient(NodeRole.REST, TestDependencies.getPlatformMgr().get());
 		RestResponse resp = client.execute(HttpMethod.PUT, "/rest/1.0/hg/event/20/event", DataFeedUtils.getInputStream("test_game_event.json"));
@@ -253,9 +265,19 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		//can be timing if ES is too fast
 		System.out.println("========== ES passed == pausing to allow completion of JDBC target insert"); //TODO: do scalar count of external DB
 		Thread.sleep(3000);
-	/*	assertEquals(" expect 2 game event rows ", 2,
-				TestDependencies.getDBMgr().get().executeScalarCountSelect(Tenant.forId("1"), "select count(*) as cnt from gameevent"));
-*/
+
+
+
+
+		Document events_to_jdbc  = TestDependencies.getDocs().get().getDocument(DocumentType.STREAM_TENANT, "events_jdbc");
+		StreamDef sd = events_to_jdbc.getBodyAsObject(StreamDef.class);
+
+		Map<String, String> db = sd.getConfigData();
+		System.out.println("DB Config for JDBC events : " + db.toString());
+
+		assertEquals(" expect 2 game event rows ", 2,
+				TestDependencies.getDBMgr().get().executeScalarCountSelect(db, "select count(*) as cnt from gameevent"));
+
 	/*	System.out.println("========== TEST PASSED!! pause 10 minutes to check system state...comment once test is working");
 		Thread.sleep(600000);*/
 

@@ -130,6 +130,10 @@ public class HGResource   {
 			//write to cold storage -- this is skipped on replay and recovery
 			is.reset();
 			coldStorageProvider.storeStream(eventType + "-" + fileName, is); //event type is s3 prefix
+
+		}
+		else {
+			System.out.println("############################## cold store disabled --------==================");
 		}
 
 
