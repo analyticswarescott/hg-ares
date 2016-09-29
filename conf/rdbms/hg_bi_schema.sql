@@ -4,17 +4,33 @@ SET sql_mode = 'ALLOW_INVALID_DATES';
 DROP TABLE IF EXISTS GameEvent;
 
 CREATE TABLE GameEvent (
-	eventid varchar(200),
-	alarmActive int,
-	alarmCode int,
-	alarmCodeDesc varchar(200),
-	someDouble DECIMAL,
-	someBigInt DECIMAL,
-	someTimestamp TIMESTAMP,
-	defaulted_ts TIMESTAMP,
-	PRIMARY KEY (eventid)
+  eventid varchar(200),
+  alarmActive int,
+  alarmCode int,
+  alarmCodeDesc varchar(200),
+  someDouble DECIMAL,
+  someBigInt DECIMAL,
+  someTimestamp TIMESTAMP,
+  defaulted_ts TIMESTAMP,
+  PRIMARY KEY (eventid)
 
 );
+
+DROP TABLE IF EXISTS OpsEvent;
+CREATE TABLE OpsEvent (
+  eventId varchar(200),
+  opsEventType varchar(200),
+  message varchar(200),
+  tableID varchar(200),
+  site_id varchar(200),
+  siteDesc varchar(200),
+  site_ts TIMESTAMP,
+  eventTimestamp TIMESTAMP,
+  PRIMARY KEY (eventId)
+
+);
+
+
 
 DROP TABLE IF EXISTS alarmcodedescriptions;
 CREATE TABLE alarmcodedescriptions (
@@ -23,6 +39,14 @@ CREATE TABLE alarmcodedescriptions (
 );
 
 insert into alarmcodedescriptions values ('12','foober');
+
+DROP TABLE IF EXISTS sitecodedescriptions;
+CREATE TABLE sitecodedescriptions (
+  ref_key varchar(200),
+  ref_value varchar (200)
+);
+
+insert into sitecodedescriptions values ('20','Cordova');
 
 
 
@@ -124,7 +148,7 @@ VALUES
   ('92dd7b83-a61c-4cff-948c-fba918dfa51b', '20', 'DealerLogout', '2016-08-03 13:17:31', '009', '009', 'stesala', 'd481f6ec-6a1d-4519-ba79-9dd417b737f2', '2016-08-03 13:17:51'),
   ('57ed8887-7e82-4e74-9e2f-550856bcfd03', '20', 'EndRound', '2016-08-03 13:17:27', '009', NULL, '0000000000000000E02B003000034B1C', 'dabef94b-1733-419f-acc3-8277c906fff6', '2016-08-03 13:17:52');
 
-
+DROP TABLE IF EXISTS audit_dead_spread;
 CREATE TABLE `audit_dead_spread` (
   `dealer_down_id` varchar(50) NOT NULL DEFAULT '',
   `audit` longtext DEFAULT NULL,

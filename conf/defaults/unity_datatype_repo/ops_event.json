@@ -1,0 +1,47 @@
+{
+    "version": 1,
+    "author": "aw",
+    "description": "operations event",
+    "body": {
+        "resolvers": [
+			{
+				"type": "com.aw.unity.json.DefaultJSONDataTypeResolver",
+				"mappings": [
+					{
+						"path": [
+							"eventType"
+						],
+						"value": "OpsEvent",
+						"data_type": "OpsEvent"
+					}
+				]
+			}],
+        "types": [
+
+            {
+                "name": "OpsEvent",
+                "display_name": "Operations Events",
+                "id_field" : "eventId",
+                "description": "Operations Events",
+                "field_refs": [
+
+                    { "name": "eventId" },
+                    { "name": "site_id" },
+                    { "name": "siteDesc" },
+                    { "name": "tableId" },
+                    { "name": "opsEventType" },
+					{ "name": "message" },
+					{ "name": "site_ts" },
+                    { "name": "eventTimestamp"}
+
+
+                ],
+                "tags" : [
+                    "system"
+                ]
+
+            }
+
+       ]
+    }
+}

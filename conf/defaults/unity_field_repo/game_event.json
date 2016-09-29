@@ -5,14 +5,6 @@
     "version_date": "2016-05-23 07:38:11.028 -0800",
     "body": {"fields": [
 
-        {
-			"array": false,
-			"description": "eventId",
-			"tags": [ "error" ],
-			"type": "string",
-			"display_name": "event id",
-			"name": "eventId"
-		},
 		{
 			"array": false,
 			"description": "alarmActive",

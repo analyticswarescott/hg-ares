@@ -4,8 +4,10 @@ import com.aw.BaseIntegrationTest;
 import com.aw.TestDependencies;
 import com.aw.common.rdbms.DBConfig;
 import com.aw.common.rdbms.DBMgr;
+import com.aw.common.system.EnvironmentSettings;
 import com.aw.document.jdbc.mysql.MySQLJDBCProvider;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.quartz.utils.DBConnectionManager;
 
 import java.io.File;
@@ -42,8 +44,9 @@ public class StreamingIntegrationTest extends BaseIntegrationTest {
 
 		System.out.println(" ================= cleaning test target JDBC databases ================== ");
 
+
 		//create
-		File f = new File(getConfDirectory() +  "/rdbms/hg_bi_schema.sql");
+		File f = new File(EnvironmentSettings.getAppLayerHome() +  "/conf/rdbms/hg_bi_schema.sql");
 		String ddl = FileUtils.readFileToString(f);
 
 		MySQLJDBCProvider provider = new MySQLJDBCProvider();

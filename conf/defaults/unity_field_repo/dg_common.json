@@ -6,6 +6,35 @@
 
         {
             "array": false,
+            "description": "globally unique eventId",
+            "tags": [ "common", "guid" ],
+            "type": "string",
+            "display_name": "eventId id",
+            "name": "eventId"
+        },
+        {
+            "array": false,
+            "description": "site id",
+            "tags": [ "common"],
+            "type": "string",
+            "display_name": "site id",
+            "name": "site_id"
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+        {
+            "array": false,
             "description": "globally unique id",
             "tags": [ "common", "guid" ],
             "type": "guid",
