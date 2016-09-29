@@ -79,13 +79,20 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 
 
 		DefaultColdStorageProvider coldStorageProvider = null;
+		String namespacePrefix = EnvironmentSettings.fetch(EnvironmentSettings.Setting.COLD_STORE_NAMESPACE_PREFIX);
 		if (EnvironmentSettings.fetch(EnvironmentSettings.Setting.COLD_STORE_ENABLED).equals("true")) {
 			//clear any test cold storage
 			coldStorageProvider = new DefaultColdStorageProvider();
-			coldStorageProvider.init(EnvironmentSettings.fetch(EnvironmentSettings.Setting.COLD_STORE_NAMESPACE_PREFIX));
+			coldStorageProvider.init(namespacePrefix);
+
+
+			//TODO: provider should filter on prefix
 
 			for (String namespace : coldStorageProvider.listNamespaces()) {
-				coldStorageProvider.deleteNamespace(namespace);
+				if (namespace.startsWith(namespacePrefix)) {
+					coldStorageProvider.deleteNamespace(namespace);
+					System.out.println(" §§§§--------------------------------->>>>>>>>>>>> COLD STORAGE NAMESPACE CLEARED : " + namespace);
+				}
 			}
 
 		}
@@ -97,10 +104,25 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		//run an archive now, running as tomorrow
 		//testArchive();
 
-		if (EnvironmentSettings.fetch(EnvironmentSettings.Setting.COLD_STORE_ENABLED).equals("true")) {
-			for (String namespace : coldStorageProvider.listNamespaces()) {
-				System.out.println(" cold store namespace ======> " + namespace);
+		Impersonation.impersonateTenant("20");
+		try {
+			if (EnvironmentSettings.fetch(EnvironmentSettings.Setting.COLD_STORE_ENABLED).equals("true")) {
+				for (String namespace : coldStorageProvider.listNamespaces()) {
+
+					if (namespace.startsWith(namespacePrefix)) {
+						System.out.println(" checking counts for cold store namespace ======> " + namespace);
+						//TODO: check type counts once we have 2 types
+
+						assertEquals("expect 3 files in cold storage ", 3, coldStorageProvider.getKeyList().size());
+
+						System.out.println("  counts for cold store namespace ======> " + namespace +  " : VERIFIED ");
+					}
+
+				}
 			}
+		}
+		finally {
+			Impersonation.unImpersonate();
 		}
 
 
@@ -272,12 +294,13 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		Document events_to_jdbc  = TestDependencies.getDocs().get().getDocument(DocumentType.STREAM_TENANT, "events_jdbc");
 		StreamDef sd = events_to_jdbc.getBodyAsObject(StreamDef.class);
 
-		Map<String, String> db = sd.getConfigData();
+		Map<String, String> db = (Map<String, String>) sd.getConfigData().get("target_db");
 		System.out.println("DB Config for JDBC events : " + db.toString());
 
 		assertEquals(" expect 2 game event rows ", 2,
 				TestDependencies.getDBMgr().get().executeScalarCountSelect(db, "select count(*) as cnt from gameevent"));
 
+		Impersonation.unImpersonate();
 	/*	System.out.println("========== TEST PASSED!! pause 10 minutes to check system state...comment once test is working");
 		Thread.sleep(600000);*/
 

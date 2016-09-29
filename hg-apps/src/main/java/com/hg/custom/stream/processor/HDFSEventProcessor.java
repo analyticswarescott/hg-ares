@@ -93,7 +93,7 @@ public class HDFSEventProcessor implements HDFSFileProcessor, Dependent {
 		try {
 
 			//init the transformer factory
-		json_transformer_factory_class = data.getConfigData().get("json_transformer_factory");
+		json_transformer_factory_class = data.getConfigData().get("json_transformer_factory").toString();
 
 		} catch (Exception ex) {
 			throw new RuntimeException(" error initializing transformer factory" , ex);

@@ -28,14 +28,15 @@ public class DBMaintain {
         MySQLJDBCProvider provider = new MySQLJDBCProvider();
 
 
+        //configured for single target db with site ID as tenant
         Map<String, String> dbc = new HashMap<>();
-        dbc.put(DBConfig.DB_HOST, "192.168.38.4");
+        dbc.put(DBConfig.DB_HOST, "localhost");
         dbc.put(DBConfig.DB_PORT, "3306");
-        dbc.put(DBConfig.DB_USER, "eric");
-        dbc.put(DBConfig.DB_PASS, "cire");
-        dbc.put(DBConfig.DB_SCHEMA, "test_bi"); //will be appended _[TENANT_ID]
+        dbc.put(DBConfig.DB_USER, "root");
+        dbc.put(DBConfig.DB_PASS, "");
+        dbc.put(DBConfig.DB_SCHEMA, "test_bi");
 
-        String url = provider.getJDBCURL(dbc, Tenant.forId("20"));
+        String url = provider.getJDBCURL(dbc);
 
         try (Connection conn = DBMgr.getConnection(url, dbc.get(DBConfig.DB_USER), dbc.get(DBConfig.DB_PASS))) {
 

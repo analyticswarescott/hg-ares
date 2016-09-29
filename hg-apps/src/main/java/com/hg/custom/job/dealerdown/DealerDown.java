@@ -203,7 +203,7 @@ public class DealerDown {
         //TODO: loop rounds in the time slive and compute relevant round totals for DD
 
         String sql = "select * " +
-                " from  hgbi.fact_event_timeline " +
+                " from  " + dbConfig.get(DBConfig.DB_SCHEMA) +  ".fact_event_timeline " +
                 " where location_id = ? and site_id = ? " +
                 " and event_ts between ? and ?" +
                 " and event_type in (?,?,?,?) " +

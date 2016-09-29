@@ -10,7 +10,7 @@
 	"memory_resource_weighting" : 0.01,
 	"cpu_resource_weighting": 0.01,
 	"schedule" : { "type" : "perpetual" },
-    "fixed_watermark" : "1473530500000",
+    "fixed_watermark" : "0",
 	"config" : {
 
       "db" : {
@@ -18,7 +18,7 @@
         "db_port" : "3306",
         "db_user" : "root",
         "db_pass" : "",
-        "db_schema" : "hgbi",
+        "db_schema" : "test_bi",
         "db_provider" : "com.aw.document.jdbc.mysql.MySQLJDBCProvider"
       }
 
