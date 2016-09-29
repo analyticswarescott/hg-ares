@@ -65,13 +65,6 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		System.setProperty("ARES_BASE_HOME", EnvironmentSettings.getAresBaseHome());
 		System.setProperty("ARES_HOME", EnvironmentSettings.getAppLayerHome());
 
-
-		//System.setProperty("ARES_SPARK_HOME", "/Users/scott/dev/src/hg-ares/test/integration/spark_test");
-
-
-
-
-
 	}
 
 	@Test
