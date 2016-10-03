@@ -1,0 +1,9 @@
+{
+  "display_name": "recipients for critical ops events ",
+  "description": " desc ",
+  "author": "aw",
+  "body": {
+        "recipients" :  ["+31681447532", "+15039390446"]
+    }
+}
+

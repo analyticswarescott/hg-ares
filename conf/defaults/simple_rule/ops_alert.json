@@ -1,0 +1,28 @@
+{
+  "display_name": "Alert on Critical Ops Events ",
+  "description": "Alert on Critical Ops Events ",
+  "author": "aw",
+  "body_class" : "com.hg.custom.rules.OpsAlertRule",
+  "body": {
+
+  	"severity" : 75,
+
+    "filter" : {
+
+        "field" : "opsEventType",
+        "operator" : "in",
+        "values" : [ "MUXControlTimeout", "TCManagerStarted" ]
+
+    },
+
+    "exclusions" : [],
+
+    "actions" : [],
+
+    "tags" : [
+        "tag1",
+        "tag2"
+    ]
+
+  }
+}

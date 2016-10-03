@@ -79,11 +79,14 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		provisionTenant("20");
 
 
-		//testGameEvents();
+		testGameEvents();
 
-		//testStatus(Tenant.forId("20"), Topic.EVENT_GROUP, 3);
+		testStatus(Tenant.forId("20"), Topic.EVENT_GROUP, 3);
 
 		testOpsEvents();
+
+		System.out.println("========== Test passed == pausing to allow manual verification of results"); //TODO: do scalar count of external DB
+		Thread.sleep(30000);
 
 
 	}
@@ -102,7 +105,7 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 
 
 		//make sure we get the counts we expect
-		DataFeedUtils.awaitESResult(ESKnownIndices.EVENTS_ES, Tenant.forId("20"), "OpsEvent", 32, 300);
+		DataFeedUtils.awaitESResult(ESKnownIndices.EVENTS_ES, Tenant.forId("20"), "OpsEvent", 23, 300);
 
 		System.out.println("========== ES passed == pausing to allow completion of JDBC target insert"); //TODO: do scalar count of external DB
 		Thread.sleep(3000);
@@ -114,13 +117,12 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 
 		Map<String, String> db = (Map<String, String>) sd.getConfigData().get("target_db");
 
-		System.out.println("DB Config for JDBC events : " + db.toString());
-		assertEquals(" expect 32 ops event rows ", 32,
+		//System.out.println("DB Config for JDBC events : " + db.toString());
+		assertEquals(" expect 32 ops event rows ", 23,
 				TestDependencies.getDBMgr().get().executeScalarCountSelect(db, "select count(*) as cnt from opsevent"));
 
 
-		System.out.println("========== Test passed == pausing to allow manual verification of results"); //TODO: do scalar count of external DB
-		Thread.sleep(3000000);
+
 
 
 	}
@@ -198,7 +200,7 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		assertEquals(12, perf.getNodeRoleList().size());
 
 
-		assertEquals(3, status.getTenantStatus().size());
+		assertEquals(2, status.getTenantStatus().size());
 		Iterator<TenantStatus> i = status.getTenantStatus().iterator();
 
 		while (i.hasNext()) {
@@ -289,7 +291,7 @@ public class EventTest extends StreamingIntegrationTest implements TenantAware {
 		StreamDef sd = events_to_jdbc.getBodyAsObject(StreamDef.class);
 
 		Map<String, String> db = (Map<String, String>) sd.getConfigData().get("target_db");
-		System.out.println("DB Config for JDBC events : " + db.toString());
+		//System.out.println("DB Config for JDBC events : " + db.toString());
 
 		assertEquals(" expect 2 game event rows ", 2,
 				TestDependencies.getDBMgr().get().executeScalarCountSelect(db, "select count(*) as cnt from gameevent"));

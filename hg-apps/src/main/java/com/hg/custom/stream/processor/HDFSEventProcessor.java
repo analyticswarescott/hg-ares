@@ -63,7 +63,7 @@ public class HDFSEventProcessor implements HDFSFileProcessor, Dependent {
 
 				Producer<String, String> producer = ResourceManager.KafkaProducerSingleton.getInstance(platform);
 
-				System.out.println(" HDFSEventProcessor : sending to JDBC");
+				//System.out.println(" HDFSEventProcessor : sending to JDBC");
 
 
 				KeyedMessage<String, String> msg = new KeyedMessage<>(Topic.toTopicString(metadata.getTenantID()
@@ -71,7 +71,7 @@ public class HDFSEventProcessor implements HDFSFileProcessor, Dependent {
 					, JSONUtils.objectToString(j));
 					producer.send(msg);
 
-				System.out.println(" HDFSEventProcessor : sent to JDBC");
+				//System.out.println(" HDFSEventProcessor : sent to JDBC");
 
 				msg = new KeyedMessage<>(Topic.toTopicString(metadata.getTenantID(),
 						Topic.EVENTS_ES), metadata.getTenantID(),
