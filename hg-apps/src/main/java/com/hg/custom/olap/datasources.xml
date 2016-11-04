@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+
+  http://mondrian.pentaho.com/documentation/installation.php#5_1_Describe_the_data_sources_in_datasources.xml
+
+-->
+<DataSources>
+
+	<DataSource>
+		<DataSourceName>HG</DataSourceName>
+		<DataSourceDescription>HG</DataSourceDescription>
+		<URL>http://localhost:8080/xmondrian/xmla</URL>
+
+		<DataSourceInfo>Provider=mondrian; Jdbc=jdbc:mysql://192.168.38.4:3306; JdbcDrivers=com.mysql.jdbc.Driver; JdbcUser=eric; JdbcPassword=cire</DataSourceInfo>
+
+		<ProviderName>Mondrian</ProviderName>
+		<ProviderType>MDP</ProviderType>
+		<AuthenticationMode>Unauthenticated</AuthenticationMode>
+		<Catalogs>
+			<Catalog name="HG">
+				<Definition>/WEB-INF/schema/HG.xml</Definition>
+			</Catalog>
+		</Catalogs>
+	</DataSource>
+
+
+
+</DataSources>

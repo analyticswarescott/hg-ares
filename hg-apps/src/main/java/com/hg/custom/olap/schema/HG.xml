@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<Schema name="HG">
+<!-- Shared dimensions -->
+
+  <Dimension name="Table">
+    <Hierarchy hasAll="true" allMemberName="All Tables" primaryKey="table_id" >
+      <Table schema="hgbi" name="tables_v" />
+      <Level name="Table Name" column="table_name" uniqueMembers="true"/>
+    </Hierarchy>
+  </Dimension>
+
+	<Dimension name="Game Type">
+		<Hierarchy hasAll="true" allMemberName="All Tables" primaryKey="game_type" >
+			<Table schema="hgbi" name="game_v" />
+			<Level name="Game Type" column="game_type" uniqueMembers="true"/>
+		</Hierarchy>
+	</Dimension>
+
+  <Dimension name="Game Date">
+    <Hierarchy hasAll="true" allMemberName="All Tables" primaryKey="dim_date" >
+      <Table schema="hgbi" name="bi_date_v" />
+      <Level name="Game Year" column="dim_year" uniqueMembers="true"/>
+      <Level name="Game Month" column="dim_month" uniqueMembers="true"/>
+      <Level name="Game Date" column="dim_date" uniqueMembers="true"/>
+    </Hierarchy>
+  </Dimension>
+
+  <Cube name="Rounds">
+    <Table schema="hgbi" name="fact_game_round_v2"/>
+    <DimensionUsage name="Table" source="Table"  foreignKey="table_id" />
+	  <DimensionUsage name="Game Type" source="Game Type"  foreignKey="game_type" />
+    <DimensionUsage name="Game Date" source="Game Date"  foreignKey="game_day" />
+
+   	  <Measure name="Total Action" column="commission_total_action" aggregator="sum" formatString="#,###"/>
+	  <Measure name="Commission Collected" column="commission_collected" aggregator="sum" formatString="#,###"/>
+
+<!--    <CalculatedMember name="Variance Percent" dimension="Measures" formula="([Measures].[Variance]/[Measures].[Budget])*100" /> -->
+  </Cube>
+
+</Schema>
